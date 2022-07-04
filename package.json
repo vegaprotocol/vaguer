@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "console-table-printer": "^2.11.0",
-    "toml": "^3.0.0"
+    "minimist": "^1.2.6",
+    "toml": "^3.0.0",
+    "valid-url": "^1.0.9"
   }
 }

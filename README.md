@@ -2,15 +2,23 @@
 
 A quick hacky command line tool to check the output from a list of data nodes on a given Vega network
 
+# Setup
+```
+npm install
+```
+
 # Run it
 ```bash
-npm install
-npm start
+# Get the status of all data nodes on fairground
+npm start fairground
+# Get the status of all data nodes on mainnet1
+npm start mainnet1
+# Get the status of all data nodes in a given network configuration file
+npm start https://raw.githubusercontent.com/vegaprotocol/networks/master/fairground/fairground.toml
 ```
 
 # Sample output
 ```
-
 ┌───────────────────────────────────┬─────────────┬────────────────────────────────┬────────────────┬────────────┬──────────────────────┐
 │                              host │ blockHeight │                       vegaTime │        chainId │ appVersion │          genesisTime │
 ├───────────────────────────────────┼─────────────┼────────────────────────────────┼────────────────┼────────────┼──────────────────────┤

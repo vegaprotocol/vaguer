@@ -1,8 +1,28 @@
 import { fetchStats, check } from './lib/check.mjs'
 import { output } from './lib/output.mjs'
+import validUrl from 'valid-url'
+import minimist from 'minimist'
 import toml from 'toml'
 
-const configUrl = 'https://raw.githubusercontent.com/vegaprotocol/networks/master/fairground/fairground.toml'
+const knownConfigUrls = {
+  'fairground': 'https://raw.githubusercontent.com/vegaprotocol/networks/master/fairground/fairground.toml',
+  'mainnet1': 'https://raw.githubusercontent.com/vegaprotocol/networks/master/mainnet1/mainnet1.toml',
+}
+
+let configUrl = false
+const args = minimist(process.argv.slice(2))
+const network = args._[0]
+
+if (knownConfigUrls.hasOwnProperty(network)) {
+  configUrl = knownConfigUrls[network]
+} else {
+  if (validUrl.isUri(network)) {
+    configUrl = network
+  } else {
+    console.error(`Please select a known network from: ${Object.keys(knownConfigUrls).join(',')}, or enter your URL to a toml file`)
+    process.exit();
+  }
+}
 
 try {
   const configRaw = await fetch(configUrl)
