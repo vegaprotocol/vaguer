@@ -1,0 +1,28 @@
+{
+  "name": "vaguer",
+  "version": "0.0.1",
+  "description": "Basic diagnostic tool for comparing vega data nodes",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --no-warnings --experimental-fetch src/index.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx standard --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edd/vaguer.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edd/vaguer/issues"
+  },
+  "homepage": "https://github.com/edd/vaguer#readme",
+  "devDependencies": {
+    "standard": "^17.0.0"
+  },
+  "dependencies": {
+    "console-table-printer": "^2.11.0",
+    "toml": "^3.0.0"
+  }
+}
