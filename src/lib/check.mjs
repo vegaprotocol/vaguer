@@ -1,6 +1,5 @@
 // Replaces the GraphQL port defined in networks.toml with the REST endpoint
-export const statsWeCareAbout = ['blockHeight', 'chainId', 'appVersion', 'totalPeers', 'vegaTime']
-export const dataWeCareAbout = ['id']
+export const statsWeCareAbout = ['blockHeight', 'totalPeers']
 import * as sha256 from 'fast-sha256'
 import stringify from 'fast-json-stable-stringify'
 import sortBy from 'lodash.sortby'
@@ -8,9 +7,9 @@ import { TextEncoder } from 'util'
 
 const query = `{
   statistics {
+    appVersion
     blockHeight
     chainId
-    appVersion
     totalPeers
     genesisTime
     vegaTime
@@ -59,18 +58,29 @@ export async function fetchStats (urlFromConfig) {
   return check(urlFromConfig, stats)
 }
 
+// Chef produces a shortened hash of some data. It is a bad function name.
+export function chef(object) {
+    return new Buffer.from(sha256.hash(stringify(object))).toString('hex').substr(-6)
+}
+
 export function check (urlFromConfig, stats) {
-  const host = urlFromConfig.replace('http://', '').replace('https://', '')
+  const host = urlFromConfig.replace('http://', '').replace('https://', '').replace(':3008', '').replace('.vega.community', '')
   const res = { host }
   try {
     statsWeCareAbout.forEach(key => res[key] = stats.data.statistics[key])
-    dataWeCareAbout.forEach(key => res[key] = stats.data.epoch[key])
+
+    const startupData = {
+      appVersion: stats.data.statistics['appVersion'],
+      genesisTime: stats.data.statistics['genesisTime'],
+      vegaTime: stats.data.statistics['vegaTime'],
+      chainId: stats.data.statistics['chainId']
+    }
 
     // Let's hash some data
-    const d = sortBy(stats.data.nodes, 'name')
+    res['steakHash'] = chef(sortBy(stats.data.nodes, 'name'))
+    res['startupHash'] = chef(startupData)
+    res['epochHash'] = chef(stats.data.epoch)
 
-    const hashResult = new Buffer.from(sha256.hash(stringify(d))).toString('hex').substr(-6)
-    res['steakHash'] = hashResult;
   } catch (e) {
     console.debug(`Failed to parse ${urlFromConfig}`)
     statsWeCareAbout.forEach(key => res[key] = '-')
