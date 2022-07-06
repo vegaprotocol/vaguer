@@ -3,6 +3,7 @@ import * as sha256 from 'fast-sha256'
 import stringify from 'fast-json-stable-stringify'
 import sortBy from 'lodash.sortby'
 import { TextEncoder } from 'util'
+
 export const statsWeCareAbout = ['blockHeight', 'totalPeers']
 
 const query = `{
@@ -18,6 +19,10 @@ const query = `{
   nodes {
     name
     stakedTotal
+  }
+  networkParameters {
+    key
+    value
   }
   epoch {
     id
@@ -67,9 +72,34 @@ export async function fetchStats (urlFromConfig) {
   return check(urlFromConfig, stats)
 }
 
+export function hashString (str) {
+  return new Buffer.from(sha256.hash(str)).toString('hex').substr(-6)
+}
+
 // Chef produces a shortened hash of some data. It is a bad function name.
 export function chef (object) {
-  return new Buffer.from(sha256.hash(stringify(object))).toString('hex').substr(-6)
+  return hashString(stringify(object))
+}
+
+export function stakeChef (stats) {
+  if (stats?.data?.nodes?.length > 0) {
+    const stakeValues = sortBy(stats.data.nodes, 'name')
+    return chef(stakeValues)
+  } else {
+    return '-'
+  }
+}
+
+export function paramChef (stats) {
+  if (stats?.data?.networkParameters?.length > 0) {
+    const paramValues = sortBy(stats.data.networkParameters, 'key')
+    return chef(paramValues)
+  } else {
+    return '-'
+  }
+}
+export function hashList (res) {
+  return hashString(`${res.steakHash}${res.startupHash}${res.epochHash}${res.paramHash}`)
 }
 
 function fakeCheck (url) {
@@ -77,10 +107,11 @@ function fakeCheck (url) {
     host: cleanHostname(url)
   }
   statsWeCareAbout.forEach(key => res[key] = '-')
-  res.steakHash = '-'
   res.startupHash = '-'
+  res.paramHash = '-'
+  res.steakHash = '-'
   res.epochHash = '-'
-
+  res.hashHash = '-'
   return res
 }
 
@@ -101,15 +132,13 @@ export function check (urlFromConfig, stats) {
       chainId: stats.data.statistics.chainId
     }
 
-    const stakeValues = sortBy(stats.data.nodes, 'name')
     // Let's hash some data
-    if (stats.data.nodes?.length > 0) {
-      res.steakHash = chef(stakeValues)
-    } else {
-      res.steakHash = '-'
-    }
     res.startupHash = chef(startupData)
+    res.paramHash = paramChef(stats)
+    res.steakHash = stakeChef(stats)
     res.epochHash = chef(stats.data.epoch)
+
+    res.hashHash = hashList(res)
   } catch (e) {
     console.debug(`Failed to parse ${urlFromConfig} (${e.message}`)
     statsWeCareAbout.forEach(key => res[key] = '-')

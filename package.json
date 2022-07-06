@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --no-warnings --experimental-fetch src/index.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx tape src/**/*.test.mjs",
     "lint": "npx standard --fix"
   },
   "repository": {
@@ -19,12 +19,18 @@
   },
   "homepage": "https://github.com/edd/vaguer#readme",
   "devDependencies": {
-    "standard": "^17.0.0"
+    "lodash.countby": "^4.6.0",
+    "standard": "^17.0.0",
+    "tape": "^5.5.3"
   },
   "dependencies": {
     "console-table-printer": "^2.11.0",
     "fast-json-stable-stringify": "^2.1.0",
     "fast-sha256": "^1.3.0",
+    "lodash.head": "^4.0.1",
+    "lodash.last": "^3.0.0",
+    "lodash.maxby": "^4.6.0",
+    "lodash.pairs": "^3.0.1",
     "lodash.sortby": "^4.7.0",
     "minimist": "^1.2.6",
     "toml": "^3.0.0",
