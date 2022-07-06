@@ -2,7 +2,6 @@
 import * as sha256 from 'fast-sha256'
 import stringify from 'fast-json-stable-stringify'
 import sortBy from 'lodash.sortby'
-import { TextEncoder } from 'util'
 
 export const statsWeCareAbout = ['blockHeight', 'totalPeers']
 
@@ -73,7 +72,7 @@ export async function fetchStats (urlFromConfig) {
 }
 
 export function hashString (str) {
-  return new Buffer.from(sha256.hash(str)).toString('hex').substr(-6)
+  return new Buffer.from(sha256.hash(str)).toString('hex').substr(-6) // eslint-disable-line new-cap
 }
 
 // Chef produces a shortened hash of some data. It is a bad function name.
@@ -106,7 +105,7 @@ function fakeCheck (url) {
   const res = {
     host: cleanHostname(url)
   }
-  statsWeCareAbout.forEach(key => res[key] = '-')
+  statsWeCareAbout.forEach(key => { res[key] = '-' })
   res.startupHash = '-'
   res.paramHash = '-'
   res.steakHash = '-'
@@ -123,7 +122,7 @@ export function check (urlFromConfig, stats) {
   const host = cleanHostname(urlFromConfig)
   const res = { host }
   try {
-    statsWeCareAbout.forEach(key => res[key] = stats.data.statistics[key])
+    statsWeCareAbout.forEach(key => { res[key] = stats.data.statistics[key] })
 
     const startupData = {
       appVersion: stats.data.statistics.appVersion,
@@ -141,7 +140,7 @@ export function check (urlFromConfig, stats) {
     res.hashHash = hashList(res)
   } catch (e) {
     console.debug(`Failed to parse ${urlFromConfig} (${e.message}`)
-    statsWeCareAbout.forEach(key => res[key] = '-')
+    statsWeCareAbout.forEach(key => { res[key] = '-' })
   }
   return res
 }

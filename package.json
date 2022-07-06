@@ -3,10 +3,14 @@
   "version": "0.0.1",
   "description": "Basic diagnostic tool for comparing vega data nodes",
   "main": "index.js",
+  "engines": {
+    "node": ">=0.17.5"
+  },
   "scripts": {
     "start": "node --no-warnings --experimental-fetch src/index.mjs",
     "test": "npx tape src/**/*.test.mjs",
-    "lint": "npx standard --fix"
+    "lint": "npx standard",
+    "lint:fix": "npx standard --fix"
   },
   "repository": {
     "type": "git",
@@ -18,8 +22,10 @@
     "url": "https://github.com/edd/vaguer/issues"
   },
   "homepage": "https://github.com/edd/vaguer#readme",
+  "precommit": ["lint", "test"],
   "devDependencies": {
     "lodash.countby": "^4.6.0",
+    "pre-commit": "^1.2.2",
     "standard": "^17.0.0",
     "tape": "^5.5.3"
   },

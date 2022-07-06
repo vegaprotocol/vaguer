@@ -3,7 +3,6 @@ import head from 'lodash.head'
 import maxBy from 'lodash.maxby'
 import pairs from 'lodash.pairs'
 import last from 'lodash.last'
-import sortBy from 'lodash.sortby'
 const mage = '🧙'
 
 /**
@@ -36,11 +35,11 @@ export function mageRank (nodeList) {
   const mageWorthy = findMostFrequentHash(nodeList)
 
   nodeList.forEach(r => {
-  	if (r.hash === '-') {
-  		r[mage] = '-'
-  	} else {
-	  	r[mage] = r.hashHash === mageWorthy ? mage : '-'
-  	}
+    if (r.hash === '-') {
+      r[mage] = '-'
+    } else {
+      r[mage] = r.hashHash === mageWorthy ? mage : '-'
+    }
   })
 
   return nodeList
