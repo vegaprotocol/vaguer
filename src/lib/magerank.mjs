@@ -3,6 +3,7 @@ import head from 'lodash.head'
 import maxBy from 'lodash.maxby'
 import pairs from 'lodash.pairs'
 import last from 'lodash.last'
+import sample from 'lodash.sample'
 const mage = '🧙'
 
 /**
@@ -43,4 +44,12 @@ export function mageRank (nodeList) {
   })
 
   return nodeList
+}
+
+export function giveMeARandomMage (nodeList) {
+  return sample(nodeList.filter(r => r[mage] === mage))
+}
+
+export function isMage (node) {
+  return (node[mage] === mage)
 }

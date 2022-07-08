@@ -22,7 +22,10 @@
     "url": "https://github.com/edd/vaguer/issues"
   },
   "homepage": "https://github.com/edd/vaguer#readme",
-  "precommit": ["lint", "test"],
+  "precommit": [
+    "lint",
+    "test"
+  ],
   "devDependencies": {
     "lodash.countby": "^4.6.0",
     "pre-commit": "^1.2.2",
@@ -37,6 +40,7 @@
     "lodash.last": "^3.0.0",
     "lodash.maxby": "^4.6.0",
     "lodash.pairs": "^3.0.1",
+    "lodash.sample": "^4.2.1",
     "lodash.sortby": "^4.7.0",
     "minimist": "^1.2.6",
     "toml": "^3.0.0",

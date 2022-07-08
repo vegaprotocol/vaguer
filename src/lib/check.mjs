@@ -54,6 +54,12 @@ export async function fetchStats (urlFromConfig) {
     })
 
     stats = await res.json()
+
+    if (process.env.DEBUG) {
+      console.group(`========= ${urlFromConfig} ========`)
+      console.dir(stats, { depth: 5 })
+      console.groupEnd(`========= ${urlFromConfig} ========`)
+    }
   } catch (e) {
     console.debug(`Failed to fetch ${urlFromConfig} (${e.message} [${e.cause.code}])`)
     return fakeCheck(urlFromConfig)
@@ -68,6 +74,7 @@ export async function fetchStats (urlFromConfig) {
     console.debug(`Failed to fetch ${urlFromConfig} (${JSON.stringify(stats.errors)})`)
     return fakeCheck(urlFromConfig)
   }
+
   return check(urlFromConfig, stats)
 }
 
@@ -80,20 +87,22 @@ export function chef (object) {
   return hashString(stringify(object))
 }
 
-export function stakeChef (stats) {
+export function stakeChef (stats, urlFromConfig) {
   if (stats?.data?.nodes?.length > 0) {
     const stakeValues = sortBy(stats.data.nodes, 'name')
     return chef(stakeValues)
   } else {
+    console.debug(`No stake details from ${urlFromConfig}`)
     return '-'
   }
 }
 
-export function paramChef (stats) {
+export function paramChef (stats, urlFromConfig) {
   if (stats?.data?.networkParameters?.length > 0) {
     const paramValues = sortBy(stats.data.networkParameters, 'key')
     return chef(paramValues)
   } else {
+    console.debug(`No network parameters from ${urlFromConfig}`)
     return '-'
   }
 }
@@ -133,8 +142,8 @@ export function check (urlFromConfig, stats) {
 
     // Let's hash some data
     res.startupHash = chef(startupData)
-    res.paramHash = paramChef(stats)
-    res.steakHash = stakeChef(stats)
+    res.paramHash = paramChef(stats, urlFromConfig)
+    res.steakHash = stakeChef(stats, urlFromConfig)
     res.epochHash = chef(stats.data.epoch)
 
     res.hashHash = hashList(res)

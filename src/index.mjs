@@ -1,5 +1,6 @@
 import { fetchStats } from './lib/check.mjs'
 import { output } from './lib/output.mjs'
+import { debug } from './lib/debug.mjs'
 import { mageRank } from './lib/magerank.mjs'
 import validUrl from 'valid-url'
 import minimist from 'minimist'
@@ -32,6 +33,7 @@ try {
   const config = await toml.parse(configText)
   Promise.all(config.API.GraphQL.Hosts.map(fetchStats))
     .then(mageRank)
+    .then(debug)
     .then(output)
 } catch (e) {
   console.error(`Failed to fetch config from ${configUrl}`)
