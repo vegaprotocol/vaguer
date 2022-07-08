@@ -11,6 +11,7 @@ const knownConfigUrls = {
   mainnet1: 'https://raw.githubusercontent.com/vegaprotocol/networks/master/mainnet1/mainnet1.toml'
 }
 
+// Fetch a toml file containing the list of data nodes to check
 let configUrl = false
 const args = minimist(process.argv.slice(2))
 const network = args._[0]
@@ -26,11 +27,14 @@ if (knownConfigUrls[network]) {
   }
 }
 
+// Process the network toml file
 try {
   const configRaw = await fetch(configUrl)
   const configText = await configRaw.text()
 
   const config = await toml.parse(configText)
+
+  // Fetch the same data from all nodes and process it
   Promise.all(config.API.GraphQL.Hosts.map(fetchStats))
     .then(mageRank)
     .then(debug)

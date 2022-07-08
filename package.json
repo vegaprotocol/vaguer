@@ -27,12 +27,12 @@
     "test"
   ],
   "devDependencies": {
-    "lodash.countby": "^4.6.0",
-    "pre-commit": "^1.2.2",
-    "standard": "^17.0.0",
-    "tape": "^5.5.3"
-  },
+    "pre-commit": "^1.2.2"
+ },
   "dependencies": {
+    "standard": "^17.0.0",
+    "tape": "^5.5.3",
+    "lodash.countby": "^4.6.0",
     "chalk": "^5.0.1",
     "console-table-printer": "^2.11.0",
     "diff": "^5.1.0",

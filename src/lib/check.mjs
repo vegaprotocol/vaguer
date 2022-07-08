@@ -1,7 +1,9 @@
-// Replaces the GraphQL port defined in networks.toml with the REST endpoint
 import { listHash, stakeHash, paramHash, prepareForHash } from './hash.mjs'
-export const statsWeCareAbout = ['blockHeight', 'totalPeers']
 
+// Statistics to pull from the `statistics` property of the result and put on each node
+const statsWeCareAbout = ['blockHeight', 'totalPeers']
+
+// This query runs against all nodes and is the basis for the data comparison
 const query = `{
   statistics {
     appVersion
@@ -90,6 +92,11 @@ export async function fetchStats (urlFromConfig) {
   return check(urlFromConfig, stats)
 }
 
+/**
+ * Produces an empty node object for nodes that fail to connect or return
+ * @param url string the URL for the node
+ * @param error string the error, used in debug output
+ */
 function fakeCheck (url, error) {
   const res = {
     host: url,
@@ -107,6 +114,13 @@ function fakeCheck (url, error) {
   return res
 }
 
+/**
+ * Given a GraphQL result from a node, hashes the data
+ * so that it can be compared with the other nodes
+ * @param urlFromConfig string the URL of the node
+ * @param stats object The GraphQL result
+ * @return array of node objects
+ **/
 export function check (urlFromConfig, stats) {
   const res = {
     host: urlFromConfig,

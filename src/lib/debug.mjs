@@ -38,7 +38,8 @@ export function hashMismatchOutput (hashName, badProperty, goodProperty) {
  * @param goodNode an object containing the repsonses from a known maged node
  */
 export function findIncorrectHash (badNode, goodNode) {
-  // Startup Hash should all be data from the network genesis
+  // Startup Hash changes every block, as it includes vegaTime which should
+  // be consistent on equal block heights
   if (badNode.startupHash !== goodNode.startupHash) {
     hashMismatchOutput('Startup', badNode.data.startup, goodNode.data.startup)
   }
