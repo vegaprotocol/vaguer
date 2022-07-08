@@ -33,8 +33,8 @@ try {
   const config = await toml.parse(configText)
   Promise.all(config.API.GraphQL.Hosts.map(fetchStats))
     .then(mageRank)
-    .then(debug)
     .then(output)
+    .then(debug)
 } catch (e) {
   console.error(`Failed to fetch config from ${configUrl}`)
 }

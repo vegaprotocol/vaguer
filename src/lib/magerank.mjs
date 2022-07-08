@@ -4,7 +4,7 @@ import maxBy from 'lodash.maxby'
 import pairs from 'lodash.pairs'
 import last from 'lodash.last'
 import sample from 'lodash.sample'
-const mage = '🧙'
+export const mage = '🧙'
 
 /**
  * The core of mageRank™, find which nodes have the same hashes

@@ -61,25 +61,40 @@ export async function fetchStats (urlFromConfig) {
       console.groupEnd(`========= ${urlFromConfig} ========`)
     }
   } catch (e) {
-    console.debug(`Failed to fetch ${urlFromConfig} (${e.message} [${e.cause.code}])`)
-    return fakeCheck(urlFromConfig)
+    const error = `Failed to fetch ${urlFromConfig} (${e.message} [${e.cause.code}])`
+
+    if (process.env.DEBUG) {
+      console.debug(error)
+    }
+
+    return fakeCheck(urlFromConfig, error)
   }
 
   if (!stats) {
-    console.debug(`Failed to fetch ${urlFromConfig} (Empty result)`)
-    return fakeCheck(urlFromConfig)
+    const error = `Failed to fetch ${urlFromConfig} (Empty result)`
+
+    if (process.env.DEBUG) {
+      console.debug(error)
+    }
+
+    return fakeCheck(urlFromConfig, error)
   }
 
   if (stats && stats.errors) {
-    console.debug(`Failed to fetch ${urlFromConfig} (${JSON.stringify(stats.errors)})`)
-    return fakeCheck(urlFromConfig)
+    const error = `Failed to fetch ${urlFromConfig} (${JSON.stringify(stats.errors)})`
+
+    if (process.env.DEBUG) {
+      console.debug(error)
+    }
+
+    return fakeCheck(urlFromConfig, error)
   }
 
   return check(urlFromConfig, stats)
 }
 
 export function hashString (str) {
-  return new Buffer.from(sha256.hash(str)).toString('hex').substr(-6) // eslint-disable-line new-cap
+  return new Buffer.from(sha256.hash(str)).toString('hex') // eslint-disable-line new-cap
 }
 
 // Chef produces a shortened hash of some data. It is a bad function name.
@@ -90,27 +105,32 @@ export function chef (object) {
 export function stakeChef (stats, urlFromConfig) {
   if (stats?.data?.nodes?.length > 0) {
     const stakeValues = sortBy(stats.data.nodes, 'name')
-    return chef(stakeValues)
+    return { hash: chef(stakeValues), data: stakeValues }
   } else {
-    console.debug(`No stake details from ${urlFromConfig}`)
-    return '-'
+    if (process.env.DEBUG) {
+      console.debug(`No stake details from ${urlFromConfig}`)
+    }
+    return { hash: '-', data: stats }
   }
 }
 
 export function paramChef (stats, urlFromConfig) {
   if (stats?.data?.networkParameters?.length > 0) {
     const paramValues = sortBy(stats.data.networkParameters, 'key')
-    return chef(paramValues)
+    return { hash: chef(paramValues), data: paramValues }
   } else {
-    console.debug(`No network parameters from ${urlFromConfig}`)
-    return '-'
+    if (process.env.DEBUG) {
+      console.debug(`No network parameters from ${urlFromConfig}`)
+    }
+
+    return { hash: '-', data: stats }
   }
 }
 export function hashList (res) {
   return hashString(`${res.steakHash}${res.startupHash}${res.epochHash}${res.paramHash}`)
 }
 
-function fakeCheck (url) {
+function fakeCheck (url, error) {
   const res = {
     host: cleanHostname(url)
   }
@@ -120,6 +140,10 @@ function fakeCheck (url) {
   res.steakHash = '-'
   res.epochHash = '-'
   res.hashHash = '-'
+  res.data = {
+    error
+  }
+
   return res
 }
 
@@ -129,7 +153,7 @@ function cleanHostname (url) {
 
 export function check (urlFromConfig, stats) {
   const host = cleanHostname(urlFromConfig)
-  const res = { host }
+  const res = { host, data: {} }
   try {
     statsWeCareAbout.forEach(key => { res[key] = stats.data.statistics[key] })
 
@@ -140,16 +164,30 @@ export function check (urlFromConfig, stats) {
       chainId: stats.data.statistics.chainId
     }
 
+    const stake = stakeChef(stats, urlFromConfig)
+    const params = paramChef(stats, urlFromConfig)
+
+    res.data.startup = startupData
+    res.data.params = params.data
+    res.data.steak = stake.data
+    res.data.epoch = stats.data.epoch
+
     // Let's hash some data
     res.startupHash = chef(startupData)
-    res.paramHash = paramChef(stats, urlFromConfig)
-    res.steakHash = stakeChef(stats, urlFromConfig)
+    res.paramHash = params.hash
+    res.steakHash = stake.hash
     res.epochHash = chef(stats.data.epoch)
 
     res.hashHash = hashList(res)
   } catch (e) {
-    console.debug(`Failed to parse ${urlFromConfig} (${e.message}`)
+    const error = `Failed to parse ${urlFromConfig} (${e.message}`
+
+    if (process.env.DEBUG) {
+      console.debug(error)
+    }
+
     statsWeCareAbout.forEach(key => { res[key] = '-' })
+    res.data = { error }
   }
   return res
 }
