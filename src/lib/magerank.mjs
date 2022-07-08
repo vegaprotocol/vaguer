@@ -5,6 +5,8 @@
  * to the most other nodes. Data is hashed in check.mjs, and this data is then used
  * to decide which hashes most likely represent the correct data given the state of
  * the network.
+ *
+ * Could also be referred to as the consensus set.
  */
 
 import countBy from 'lodash.countby'

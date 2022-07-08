@@ -1,8 +1,5 @@
 // Replaces the GraphQL port defined in networks.toml with the REST endpoint
-import * as sha256 from 'fast-sha256'
-import stringify from 'fast-json-stable-stringify'
-import sortBy from 'lodash.sortby'
-
+import { listHash, stakeHash, paramHash, prepareForHash } from './hash.mjs'
 export const statsWeCareAbout = ['blockHeight', 'totalPeers']
 
 const query = `{
@@ -93,67 +90,29 @@ export async function fetchStats (urlFromConfig) {
   return check(urlFromConfig, stats)
 }
 
-export function hashString (str) {
-  return new Buffer.from(sha256.hash(str)).toString('hex') // eslint-disable-line new-cap
-}
-
-// Chef produces a shortened hash of some data. It is a bad function name.
-export function chef (object) {
-  return hashString(stringify(object))
-}
-
-export function stakeChef (stats, urlFromConfig) {
-  if (stats?.data?.nodes?.length > 0) {
-    const stakeValues = sortBy(stats.data.nodes, 'name')
-    return { hash: chef(stakeValues), data: stakeValues }
-  } else {
-    if (process.env.DEBUG) {
-      console.debug(`No stake details from ${urlFromConfig}`)
-    }
-    return { hash: '-', data: undefined }
-  }
-}
-
-export function paramChef (stats, urlFromConfig) {
-  if (stats?.data?.networkParameters?.length > 0) {
-    const paramValues = sortBy(stats.data.networkParameters, 'key')
-    return { hash: chef(paramValues), data: paramValues }
-  } else {
-    if (process.env.DEBUG) {
-      console.debug(`No network parameters from ${urlFromConfig}`)
-    }
-
-    return { hash: '-', data: undefined }
-  }
-}
-export function hashList (res) {
-  return hashString(`${res.steakHash}${res.startupHash}${res.epochHash}${res.paramHash}`)
-}
-
 function fakeCheck (url, error) {
   const res = {
-    host: cleanHostname(url)
+    host: url,
+    startupHash: '-',
+    paramHash: '-',
+    steakHash: '-',
+    epochHash: '-',
+    hashHash: '-',
+    data: {
+      error
+    }
   }
   statsWeCareAbout.forEach(key => { res[key] = '-' })
-  res.startupHash = '-'
-  res.paramHash = '-'
-  res.steakHash = '-'
-  res.epochHash = '-'
-  res.hashHash = '-'
-  res.data = {
-    error
-  }
 
   return res
 }
 
-function cleanHostname (url) {
-  return url.replace('http://', '').replace('https://', '').replace(':3008', '').replace('.vega.community', '')
-}
-
 export function check (urlFromConfig, stats) {
-  const host = cleanHostname(urlFromConfig)
-  const res = { host, data: {} }
+  const res = {
+    host: urlFromConfig,
+    data: {}
+  }
+
   try {
     statsWeCareAbout.forEach(key => { res[key] = stats.data.statistics[key] })
 
@@ -164,8 +123,8 @@ export function check (urlFromConfig, stats) {
       chainId: stats.data.statistics.chainId
     }
 
-    const stake = stakeChef(stats, urlFromConfig)
-    const params = paramChef(stats, urlFromConfig)
+    const stake = stakeHash(stats, urlFromConfig)
+    const params = paramHash(stats, urlFromConfig)
 
     res.data.startup = startupData
     res.data.params = params.data
@@ -173,12 +132,12 @@ export function check (urlFromConfig, stats) {
     res.data.epoch = stats.data.epoch
 
     // Let's hash some data
-    res.startupHash = chef(startupData)
+    res.startupHash = prepareForHash(startupData)
     res.paramHash = params.hash
     res.steakHash = stake.hash
-    res.epochHash = chef(stats.data.epoch)
+    res.epochHash = prepareForHash(stats.data.epoch)
 
-    res.hashHash = hashList(res)
+    res.hashHash = listHash(res)
   } catch (e) {
     const error = `Failed to parse ${urlFromConfig} (${e.message}`
 

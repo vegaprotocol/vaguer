@@ -1,6 +1,10 @@
 import { Table } from 'console-table-printer'
 import { isMage, summonAMage, mage } from './magerank.mjs'
 
+function cleanHostname (url) {
+  return url.replace('http://', '').replace('https://', '').replace(':3008', '').replace('.vega.community', '')
+}
+
 export async function output (nodes) {
   const p = new Table()
   let mageForComparison
@@ -29,7 +33,7 @@ export async function output (nodes) {
 
     // Format the first we want to present for the table
     const output = {
-      host: node.host,
+      host: cleanHostname(node.host),
       blockHeight: node.blockHeight,
       totalPeers: node.totalPeers,
       startupHash: node.startupHash ? node.startupHash.substr(-6) : '-',
