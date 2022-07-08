@@ -23,6 +23,7 @@ export async function output (nodes) {
     // Clean up for presentation
     const output = {
       host: node.host,
+      blockHeight: node.blockHeight,
       totalPeers: node.totalPeers,
       startupHash: node.startupHash ? node.startupHash.substr(-6) : '-',
       paramHash: node.paramHash ? node.paramHash.substr(-6) : '-',
