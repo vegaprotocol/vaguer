@@ -12,8 +12,10 @@ export function hashMismatchOutput (hashName, badProperty, goodProperty) {
   badDiff.forEach((part) => {
     const color = part.added
       ? chalk.green(part.value)
-      : part.removed ? chalk.red(part.value) : chalk.grey(part.value)
-    console.log(color)
+      : part.removed ? chalk.red(part.value) : undefined// chalk.grey(part.value)
+    if (color) {
+      console.log(color)
+    }
   })
 
   console.groupEnd()

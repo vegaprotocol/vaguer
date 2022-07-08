@@ -110,7 +110,7 @@ export function stakeChef (stats, urlFromConfig) {
     if (process.env.DEBUG) {
       console.debug(`No stake details from ${urlFromConfig}`)
     }
-    return { hash: '-', data: stats }
+    return { hash: '-', data: undefined }
   }
 }
 
@@ -123,7 +123,7 @@ export function paramChef (stats, urlFromConfig) {
       console.debug(`No network parameters from ${urlFromConfig}`)
     }
 
-    return { hash: '-', data: stats }
+    return { hash: '-', data: undefined }
   }
 }
 export function hashList (res) {
