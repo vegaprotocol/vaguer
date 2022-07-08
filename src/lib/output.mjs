@@ -10,12 +10,8 @@ export async function output (nodes) {
 
     if (!isMage(node)) {
       if (node.blockHeight !== '-' && node.blockHeight !== mageForComparison.blockHeight) {
-        node.data.diagnosisCode = 0
-        node.data.diagnosis = 'Probably no error: node returned a different block to the mages'
         color = 'yellow'
       } else {
-        node.data.diagnosisCode = 1
-        node.data.diagnosis = 'Node did not return good data'
         color = 'red'
       }
     }

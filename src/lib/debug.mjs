@@ -8,11 +8,11 @@ export function hashMismatchOutput (hashName, badProperty, goodProperty) {
     return
   }
   console.group(`${hashName} hash was different:`)
-  const badDiff = diffJson(goodProperty, badProperty)
+  const badDiff = diffJson(goodProperty, badProperty, { context: 2, ignoreWhitespace: false })
   badDiff.forEach((part) => {
     const color = part.added
       ? chalk.green(part.value)
-      : part.removed ? chalk.red(part.value) : undefined// chalk.grey(part.value)
+      : part.removed ? chalk.red(part.value) : chalk.grey(part.value)
     if (color) {
       console.log(color)
     }
@@ -43,11 +43,19 @@ export function debug (nodes) {
 
   nodes.forEach(node => {
     if (!isMage(node)) {
-      console.group(node.host)
+      console.group(chalk.bold(node.host))
 
       if (node.data.error) {
         console.error(node.data.error)
       } else {
+        if (node.blockHeight !== '-' && node.blockHeight !== mage.blockHeight) {
+          node.data.diagnosisCode = 0
+          node.data.diagnosis = 'Probably no error: node returned a different block to the mages'
+        } else {
+          node.data.diagnosisCode = 1
+          node.data.diagnosis = 'Node did not return good data'
+        }
+
         if (node.data.diagnosisCode === 1) {
           findIncorrectHash(node, mage)
         } else {
@@ -55,7 +63,7 @@ export function debug (nodes) {
         }
       }
 
-      console.groupEnd(node.name)
+      console.groupEnd()
     }
   })
 
