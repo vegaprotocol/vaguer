@@ -1,22 +1,33 @@
 import { Table } from 'console-table-printer'
-import { isMage, giveMeARandomMage, mage } from './magerank.mjs'
+import { isMage, summonAMage, mage } from './magerank.mjs'
 
 export async function output (nodes) {
   const p = new Table()
-  const mageForComparison = giveMeARandomMage(nodes)
+  let mageForComparison
+  try {
+    mageForComparison = summonAMage(nodes)
+  } catch (e) {
+    // There is no agreed upon hash, so use an object that should never match
+    mageForComparison = { blockHeight: -200 }
+  }
 
   nodes.forEach(node => {
     let color = 'green'
 
+    // Colour code nodes. Green means it is in a set of nodes that agree on ouput
     if (!isMage(node)) {
       if (node.blockHeight !== '-' && node.blockHeight !== mageForComparison.blockHeight) {
+        // Yellow means the node was at a different block height to the consensus set,
+        // so it failed but for reasons that may be valid due to changes between blocks
         color = 'yellow'
       } else {
+        // Red means they're either totally invalid, or disagree on data at the same
+        // block height as the consensus set
         color = 'red'
       }
     }
 
-    // Clean up for presentation
+    // Format the first we want to present for the table
     const output = {
       host: node.host,
       blockHeight: node.blockHeight,
