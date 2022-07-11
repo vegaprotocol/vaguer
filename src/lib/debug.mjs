@@ -32,32 +32,40 @@ export function hashMismatchOutput (hashName, badProperty, goodProperty) {
 
 /**
  * Boring function to decide which fields we need want to display to help
- * diagnose a hash mismatch between nodes
+ * diagnose a hash mismatch between nodes.
+ *
+ * Could be less repetitive.
  *
  * @param badNode an object containing the responses from a non-maged node
  * @param goodNode an object containing the repsonses from a known maged node
  */
 export function findIncorrectHash (badNode, goodNode) {
-  // Startup Hash changes every block, as it includes vegaTime which should
-  // be consistent on equal block heights
   if (badNode.startupHash !== goodNode.startupHash) {
     hashMismatchOutput('Startup', badNode.data.startup, goodNode.data.startup)
   }
-  // Network paramters should be consistent, but can change due to governance
-  // votes so is not reliably consistent between nodes on different block heights
+
   if (badNode.paramHash !== goodNode.paramHash) {
     hashMismatchOutput('Params', badNode.data.params, goodNode.data.params)
   }
-  // Nodes and staked totaly change at epoch boundaries. Nodes on the same epoch
-  // should have the same data, nodes on different epochs will also have different
-  // epochHashes
+
   if (badNode.steakHash !== goodNode.steakHash) {
     hashMismatchOutput('Stake', badNode.data.steak, goodNode.data.steak)
   }
-  // Epoch data should be the same across nodes but will differ between nodes at
-  // different block heights.
+
   if (badNode.epochHash !== goodNode.epochHash) {
     hashMismatchOutput('Epoch', badNode.data.epoch, goodNode.data.epoch)
+  }
+
+  if (badNode.assetsHash !== goodNode.assetsHash) {
+    hashMismatchOutput('Assets', badNode.data.assets, goodNode.data.assets)
+  }
+
+  if (badNode.marketsHash !== goodNode.marketsHash) {
+    hashMismatchOutput('Markets', badNode.data.markets, goodNode.data.markets)
+  }
+
+  if (badNode.governanceHash !== goodNode.governanceHash) {
+    hashMismatchOutput('Governance', badNode.data.governance, goodNode.data.governance)
   }
 }
 

@@ -20,8 +20,8 @@ export function prepareForHash (object) {
  * @param res Object node object with calculated hashes
  * @return string Hash of hashes
  **/
-export function listHash (res) {
-  return hashString(`${res.steakHash}${res.startupHash}${res.epochHash}${res.paramHash}`)
+export function listHash () {
+  return hashString(Array.from(arguments).join(',').toString())
 }
 
 /**

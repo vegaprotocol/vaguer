@@ -36,10 +36,13 @@ export async function output (nodes) {
       host: cleanHostname(node.host),
       blockHeight: node.blockHeight,
       totalPeers: node.totalPeers,
-      startupHash: node.startupHash ? node.startupHash.substr(-6) : '-',
-      paramHash: node.paramHash ? node.paramHash.substr(-6) : '-',
+      // Next two stats disabled for brevity. They still appear in the diagnosis output and are used in hashHash
+      // startupHash: node.startupHash ? node.startupHash.substr(-6) : '-',
+      // paramHash: node.paramHash ? node.paramHash.substr(-6) : '-',
       steakHash: node.steakHash ? node.steakHash.substr(-6) : '-',
-      epochHash: node.epochHash ? node.epochHash.substr(-6) : '-',
+      marketsHash: node.marketsHash ? node.marketsHash.substr(-6) : '-',
+      assetsHash: node.assetsHash ? node.assetsHash.substr(-6) : '-',
+      governanceHash: node.governanceHash ? node.governanceHash.substr(-6) : '-',
       hashHash: node.hashHash ? node.hashHash.substr(-6) : '-'
     }
     output[mage] = node[mage]

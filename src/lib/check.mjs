@@ -30,6 +30,64 @@ const query = `{
       end
     }
   }
+  proposals {
+    id
+    party {
+      id
+      stake {
+        currentStakeAvailable
+      }
+    }
+    state
+    datetime
+    errorDetails
+    terms {
+      change {
+        __typename
+      }
+      closingDatetime
+      enactmentDatetime
+    }
+  }
+  assets {
+    id
+    name
+    symbol
+    totalSupply
+    decimals
+    quantum
+    source {
+      ... on ERC20 {
+        contractAddress
+      }
+      ... on BuiltinAsset {
+        maxFaucetAmountMint
+      }
+    }
+    infrastructureFeeAccount {
+      balance
+    }
+    globalRewardPoolAccount {
+      balance
+    }
+  }
+  markets {
+    id
+    name
+    state
+    tradingMode
+    name
+    accounts {
+      type
+      balance
+    }
+    data {
+      auctionEnd
+      auctionStart
+      trigger
+      markPrice
+    }
+  }
 }`
 
 export async function fetchStats (urlFromConfig) {
@@ -103,7 +161,6 @@ function fakeCheck (url, error) {
     startupHash: '-',
     paramHash: '-',
     steakHash: '-',
-    epochHash: '-',
     hashHash: '-',
     data: {
       error
@@ -134,7 +191,9 @@ export function check (urlFromConfig, stats) {
       appVersion: stats.data.statistics.appVersion,
       genesisTime: stats.data.statistics.genesisTime,
       vegaTime: stats.data.statistics.vegaTime,
-      chainId: stats.data.statistics.chainId
+      chainId: stats.data.statistics.chainId,
+      epoch: stats.data.epoch.id,
+      timestamps: stats.data.epoch.timestamps
     }
 
     const stake = stakeHash(stats, urlFromConfig)
@@ -143,15 +202,19 @@ export function check (urlFromConfig, stats) {
     res.data.startup = startupData
     res.data.params = params.data
     res.data.steak = stake.data
-    res.data.epoch = stats.data.epoch
+    res.data.governance = stats.data.proposals
+    res.data.markets = stats.data.markets
+    res.data.assets = stats.data.assets
 
     // Let's hash some data
     res.startupHash = prepareForHash(startupData)
     res.paramHash = params.hash
     res.steakHash = stake.hash
-    res.epochHash = prepareForHash(stats.data.epoch)
+    res.governanceHash = prepareForHash(stats.data.proposals)
+    res.marketsHash = prepareForHash(stats.data.markets)
+    res.assetsHash = prepareForHash(stats.data.assets)
 
-    res.hashHash = listHash(res)
+    res.hashHash = listHash(res.startupHash, res.paramHash, res.steakHash, res.marketsHash, res.assetsHash, res.governanceHash)
   } catch (e) {
     const error = `Failed to parse ${urlFromConfig} (${e.message}`
 
