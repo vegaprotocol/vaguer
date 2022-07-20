@@ -1,5 +1,5 @@
 import { Table } from 'console-table-printer'
-import { isMage, summonAMage, mage } from './magerank.mjs'
+import { getGradeANode, grade, isGradeA } from './grade.mjs'
 
 function cleanHostname (url) {
   return url.replace('http://', '').replace('https://', '').replace(':3008', '').replace('.vega.community', '')
@@ -7,20 +7,20 @@ function cleanHostname (url) {
 
 export async function output (nodes) {
   const p = new Table()
-  let mageForComparison
+  let nodeForComparison
   try {
-    mageForComparison = summonAMage(nodes)
+    nodeForComparison = getGradeANode(nodes)
   } catch (e) {
     // There is no agreed upon hash, so use an object that should never match
-    mageForComparison = { blockHeight: -200 }
+    nodeForComparison = { blockHeight: -200 }
   }
 
   nodes.forEach(node => {
     let color = 'green'
 
     // Colour code nodes. Green means it is in a set of nodes that agree on ouput
-    if (!isMage(node)) {
-      if (node.blockHeight !== '-' && node.blockHeight !== mageForComparison.blockHeight) {
+    if (!isGradeA(node)) {
+      if (node.blockHeight !== '-' && node.blockHeight !== nodeForComparison.blockHeight) {
         // Yellow means the node was at a different block height to the consensus set,
         // so it failed but for reasons that may be valid due to changes between blocks
         color = 'yellow'
@@ -45,7 +45,7 @@ export async function output (nodes) {
       governanceHash: node.governanceHash ? node.governanceHash.substr(-6) : '-',
       hashHash: node.hashHash ? node.hashHash.substr(-6) : '-'
     }
-    output[mage] = node[mage]
+    output[grade] = node[grade]
 
     p.addRow(output, { color })
   })

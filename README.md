@@ -1,14 +1,10 @@
-# Vaguer
+# Grade
 
-A quick hacky command line tool to check the output from a list of data nodes on a given Vega network
-
-# Setup
-```
-npm install
-```
+Scores data nodes against peers over time 
 
 # Run it
 ```bash
+npm install
 # Get the status of all data nodes on fairground
 npm start fairground
 # Get the status of all data nodes on mainnet1
@@ -20,54 +16,39 @@ npm start https://raw.githubusercontent.com/vegaprotocol/networks/master/fairgro
 # What am I seeing?
 The hash columns are a shortened sha256 hash of some data fetched from the server, so that the consistency across nodes can be compared. A difference in hashes between two nodes means that some part of the data returned is different.
 
-## Steak Hash
-A hash of the following data, fetched from GraphQL and sorted by validator name:
-- The list of all validators;
-	- Their name
-	- The total staked balance
+* *host* is the reported name of the node, as configured in the `network.toml` for the selected network
+* *blockHeight* is shown, as only nodes with the same block height are relevant. Some of the hashed data can change between blocks
+* *totalPeers*  is show, but is not hashed - it's just an indicator of node health
+* *steakHash* is a hash of all of the validators and their staking amounts. Nodes on the same block should have the same data.
+* *marketsHash* hashes some basic information about the markets live on the network
+* *assetsHash* hashes some basic information about the active assets on the network
+* *governanceHash* hashes some basic information about governance proposals on the network
+* *hashHash* is a hash of the above hashes, plus a hash of network information and genesis information
 
-Total stake can change at the end of an epoch, so a difference in hashes between nodes on different block heights is not out of the ordinary. Nodes with the same block height should not have different hashes.
-
-## Startup Hash
-A hash of the following data, fetched from GraphQL:
-- Vega time
-- Genesis time
-- App version
-- Chain ID
-
-As Vega time is synced across nodes, this should rarely be out of sync. One field that has caused hash differences in the past is `App Version` - as of `0.52.x` the version here can be blank at compile time. 
-
-## Epoch hash
-A hash of the following data, fetched from GraphQL:
-- Epoch ID
-- Epoch start time
-- Epoch expiry
-- Epoch end time (will always be blank for the current epoch)
-
-## Parameter hash
-A hash of all of the network parameters and their configuration. As network parameters can be changed by governance, nodes at different
-block heights could have different hashes, but this is unlikely to be a common occurence.
-
-## Hash hash
-A hash of all of the above hashes - essentially which nodes match in all significant state. The most common hash earns a 🧙.
-
-## Magerank™
-Magerank™ is a sophisticated (simple) proprietary algorithm (array sort) for highlighting the nodes that agree on the hashHash.
+The final result is that the set of nodes that are on the same height and agree on the final `hashHash` are considered to be 'correct', and the nodes that differ will
+display some debugging information above the table that points to where the hashes diverge. Divergent hashes of nodes on the same block height suggest a problem with the
+node, and aren't _necessarily_ critical errors.
 
 # Sample output
 ```
-┌──────────────────────────────┬─────────────┬────────────┬───────────┬─────────────┬───────────┬────────┬──────────┬────┐
-│                         host │ blockHeight │ totalPeers │ steakHash │ startupHash │ epochHash │ paramHash │ hashHash │ 🧙 │
-├──────────────────────────────┼─────────────┼────────────┼───────────┼─────────────┼───────────┼───────────┼──────────┼────┤
-│                       Node 1 │           - │          - │         - │           - │         - │         - │        - │  - │
-│                       Node 2 │        3341 │         10 │         - │      d175ce │    93c98e │    1c9ec1 │   8aa142 │  - │
-│                       Node 3 │           - │          - │         - │           - │         - │         - │        - │  - │
-│                       Node 4 │        3341 │          1 │         - │      7b29a4 │    93c98e │         - │   7d1375 │  - │
-│                       Node 5 │        3341 │         10 │    8209ed │      7b29a4 │    93c98e │    6eb8d7 │   9b7cc0 │ 🧙 │
-│                       Node 6 │        3341 │          9 │    8209ed │      7b29a4 │    93c98e │    6eb8d7 │   9b7cc0 │ 🧙 │
-│                       Node 7 │           - │          - │         - │           - │         - │         - │        - │  - │
-│                       Node 8 │        3341 │         10 │    8209ed │      7b29a4 │    93c98e │    6eb8d7 │   9b7cc0 │ 🧙 │
-│                       Node 9 │           - │          - │         - │           - │         - │         - │        - │  - │
-└──────────────────────────────┴─────────────┴────────────┴───────────┴─────────────┴───────────┴───────────┴──────────┴────┘
-
+┌──────────────────────────────┬─────────────┬────────────┬───────────┬─────────────┬────────────┬────────────────┬──────────┬────┐
+│                         host │ blockHeight │ totalPeers │ steakHash │ marketsHash │ assetsHash │ governanceHash │ hashHash │ 🧙 │
+├──────────────────────────────┼─────────────┼────────────┼───────────┼─────────────┼────────────┼────────────────┼──────────┼────┤
+│                       Node 1 │           - │          - │         - │           - │          - │              - │        - │  - │
+│                 Data  node 2 │     1108876 │         10 │    a2e0f5 │      b81119 │     5c549f │         b81119 │   1cd442 │  - │
+│                       Node 3 |           - │          - │         - │           - │          - │              - │        - │  - │
+│                       Node 4 │     1108876 │         10 │    a2e0f5 │      b81119 │     5c549f │         b81119 │   9a51b1 │  - │
+│                       Node 5 │     1108877 │         10 │    a2e0f5 │      b81119 │     5c549f │         b81119 │   c5877a │ 🧙 │
+│                 Another node │     1108877 │         21 │    a2e0f5 │      b81119 │     5c549f │         b81119 │   c5877a │ 🧙 │
+│                Node number 6 │           - │          - │         - │           - │          - │              - │        - │  - │
+│                       Node 7 │           - │          - │         - │           - │          - │              - │        - │  - │
+│                  Test node 8 │     1108877 │         11 │    a2e0f5 │      b81119 │     5c549f │         b81119 │   c5877a │ 🧙 │
+│                  Data node 9 │     1108877 │         21 │    a2e0f5 │      b81119 │     5c549f │         b81119 │   c5877a │ 🧙 │
+│                       node10 │           - │          - │         - │           - │          - │              - │        - │  - │
+│                   Node Name  │     1108877 │         21 │    a2e0f5 │      b81119 │     5c549f │         b81119 │   c5877a │ 🧙 │
+│              Example node 12 │     1108877 │         10 │    a2e0f5 │      b81119 │     5c549f │         b81119 │   c5877a │ 🧙 │
+└──────────────────────────────┴─────────────┴────────────┴───────────┴─────────────┴────────────┴────────────────┴──────────┴────┘
 ```
+
+# [LICENSE](./LICENSE)
+MIT

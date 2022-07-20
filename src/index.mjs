@@ -1,7 +1,7 @@
 import { fetchStats } from './lib/check.mjs'
 import { output } from './lib/output.mjs'
 import { debug } from './lib/debug.mjs'
-import { mageRank } from './lib/magerank.mjs'
+import { rank } from './lib/grade.mjs'
 import validUrl from 'valid-url'
 import minimist from 'minimist'
 import toml from 'toml'
@@ -36,7 +36,7 @@ try {
 
   // Fetch the same data from all nodes and process it
   Promise.all(config.API.GraphQL.Hosts.map(fetchStats))
-    .then(mageRank)
+    .then(rank)
     .then(debug)
     .then(output)
 } catch (e) {

@@ -1,7 +1,7 @@
 /**
- * mageRank™, a system for ranking Vega data nodes
+ * Grade. Formerly mageRank™, a system for ranking Vega data nodes
  *
- * 'maged' nodes are nodes that are in the set that returned data that corresponds
+ * Grade A nodes are nodes that are in the set that returned data that corresponds
  * to the most other nodes. Data is hashed in check.mjs, and this data is then used
  * to decide which hashes most likely represent the correct data given the state of
  * the network.
@@ -16,11 +16,11 @@ import pairs from 'lodash.pairs'
 import last from 'lodash.last'
 import sample from 'lodash.sample'
 
-// The label assigned to node sthat agree on all important data
-export const mage = '🧙'
+// The label assigned to nodes that agree on all important data
+export const grade = '🅰️'
 
 /**
- * The core of mageRank™, find which nodes have the same hashes
+ * The core grading metric, find which nodes have the same hashes
  * and which hashes are most common. Hopefully a big number
  *
  * @param nodeList Object containing rows with the property 'hashHash'
@@ -28,7 +28,7 @@ export const mage = '🧙'
 export function findMostFrequentHash (nodeList) {
   const hashRank = countBy(nodeList, 'hashHash')
 
-  // Blank may well be the most consistent hash, but mageRank™ ignores this
+  // Blank may well be the most consistent hash, but we can ignores this
   delete hashRank['-']
 
   const hashAndRank = pairs(hashRank)
@@ -44,22 +44,22 @@ export function findMostFrequentHash (nodeList) {
  *
  * @param nodeList Object to rank
  */
-export function mageRank (nodeList) {
+export function rank (nodeList) {
   // Get the most used hash
-  const mageWorthy = findMostFrequentHash(nodeList)
-  let mages = 0
+  const topNodeHash = findMostFrequentHash(nodeList)
+  let gradeA = 0
 
   nodeList.forEach(r => {
-    if (r.hashHash === mageWorthy) {
-      r[mage] = r.hashHash === mageWorthy ? mage : '-'
-      mages++
+    if (r.hashHash === topNodeHash) {
+      r[grade] = r.hashHash === topNodeHash ? grade : '-'
+      gradeA++
     } else {
-      r[mage] = '-'
+      r[grade] = '-'
     }
   })
 
-  if (mages < 2) {
-    console.error(`Unreliable number of mages (${mages})`)
+  if (gradeA < 2) {
+    console.error(`Unreliable number of grade A nodes (${gradeA})`)
   }
 
   return nodeList
@@ -73,22 +73,22 @@ export function mageRank (nodeList) {
  * @param nodeList array Array of node objects
  * @return Object a single node
  */
-export function summonAMage (nodeList) {
-  const summonedMage = sample(nodeList.filter(r => r[mage] === mage))
+export function getGradeANode (nodeList) {
+  const node = sample(nodeList.filter(r => r[grade] === grade))
 
-  if (!summonedMage) {
-    throw new Error('Insufficient Mage Error')
+  if (!node) {
+    throw new Error('Insufficient Grade A Nodes Error')
   }
 
-  return summonedMage
+  return node
 }
 
 /**
- * Checks if a node is 'correct' based on a label assigned in mageRank
+ * Checks if a node is 'correct' based on a label assigned in grade
  *
- * @param Object A node that may or may not have a mage label
+ * @param Object A node that may or may not have a grade A
  * @return boolean
  */
-export function isMage (node) {
-  return (node && node[mage] === mage)
+export function isGradeA (node) {
+  return (node && node[grade] === grade)
 }

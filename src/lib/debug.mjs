@@ -1,4 +1,4 @@
-import { isMage, summonAMage } from './magerank.mjs'
+import { isGradeA, getGradeANode } from './grade.mjs'
 import { diffJson } from 'diff'
 import chalk from 'chalk'
 
@@ -9,7 +9,7 @@ import chalk from 'chalk'
  *
  * @param hashname String title to display in the output
  * @param badProperty Object the data that went in to the hash on the node deemed incorrect
- * @param goodProperty Object the corresponding data from a maged node
+ * @param goodProperty Object the corresponding data from a good node
  **/
 export function hashMismatchOutput (hashName, badProperty, goodProperty) {
   if (badProperty === '-' || badProperty === undefined) {
@@ -36,8 +36,8 @@ export function hashMismatchOutput (hashName, badProperty, goodProperty) {
  *
  * Could be less repetitive.
  *
- * @param badNode an object containing the responses from a non-maged node
- * @param goodNode an object containing the repsonses from a known maged node
+ * @param badNode an object containing the responses from a non-grade-a node
+ * @param goodNode an object containing the responses from a known good node
  */
 export function findIncorrectHash (badNode, goodNode) {
   if (badNode.startupHash !== goodNode.startupHash) {
@@ -70,19 +70,19 @@ export function findIncorrectHash (badNode, goodNode) {
 }
 
 export function debug (nodes) {
-  let mage
+  let gradeANode
 
   try {
-    mage = summonAMage(nodes)
+    gradeANode = getGradeANode(nodes)
   } catch (e) {
-    console.error('Not enough mages to debug output')
+    console.error('Not enough good nodes to debug output')
     process.exit(1)
   }
 
   nodes.forEach(node => {
-    // Mage nodes are deemed correct - they match enough other people. We only
+    // Good nodes are deemed correct - they match enough other people. We only
     // Produce diagnoses for 'incorrect' nodes
-    if (!isMage(node)) {
+    if (!isGradeA(node)) {
       console.group(chalk.bold(node.host))
 
       // Nodes that failed to respond, or produced unknown responses will have
@@ -92,7 +92,7 @@ export function debug (nodes) {
       } else {
         // If the block height is doesn't match the mage node, there's no point
         // in diagnosing the error
-        if (node.blockHeight !== '-' && node.blockHeight !== mage.blockHeight) {
+        if (node.blockHeight !== '-' && node.blockHeight !== gradeANode.blockHeight) {
           node.data.diagnosisCode = 0
           node.data.diagnosis = 'Probably no error: node returned a different block to the mages'
           console.error(node.data.diagnosis)
@@ -102,7 +102,7 @@ export function debug (nodes) {
           node.data.diagnosis = 'Node did not return good data'
 
           // Let's dig in...
-          findIncorrectHash(node, mage)
+          findIncorrectHash(node, gradeANode)
         }
       }
 
