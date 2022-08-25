@@ -90,7 +90,11 @@ const query = `{
 }`
 
 export async function fetchStats (urlFromConfig) {
-  const url = urlFromConfig
+  let url = urlFromConfig
+
+  if (url.indexOf('query') === -1 && url.indexOf('graphql') === -1) {
+    url = url + '/query'
+  }
 
   let res, stats
 

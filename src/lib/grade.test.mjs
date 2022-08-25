@@ -44,8 +44,8 @@ test('getGradeANode returns one of the mages in a node list', t => {
 
   const gradeA = getGradeANode([
     { host: 'Not a grade A', grade: false },
-    { host: 'Tommy', '🅰️': '🅰️' },
-    { host: 'Merlin', '🅰️': '🅰️' }
+    { host: 'Tommy', '🥇': '🥇' },
+    { host: 'Merlin', '🥇': '🥇️' }
   ])
 
   t.notEqual(gradeA.host, 'Not a gradeA', 'Returned grade A node should be tommy or merlin')

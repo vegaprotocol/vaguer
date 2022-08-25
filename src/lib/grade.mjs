@@ -17,7 +17,7 @@ import last from 'lodash.last'
 import sample from 'lodash.sample'
 
 // The label assigned to nodes that agree on all important data
-export const grade = '🅰️'
+export const grade = '🥇'
 
 /**
  * The core grading metric, find which nodes have the same hashes
