@@ -53,7 +53,6 @@ const query = `{
     id
     name
     symbol
-    totalSupply
     decimals
     quantum
     source {
@@ -91,10 +90,8 @@ const query = `{
 }`
 
 export async function fetchStats (urlFromConfig) {
-  let url = urlFromConfig
-  if (url.indexOf('query') === -1) {
-    url = url + '/query'
-  }
+  const url = urlFromConfig
+
   let res, stats
 
   try {
@@ -111,14 +108,8 @@ export async function fetchStats (urlFromConfig) {
     })
 
     stats = await res.json()
-
-    if (process.env.DEBUG) {
-      console.group(`========= ${urlFromConfig} ========`)
-      console.dir(stats, { depth: 5 })
-      console.groupEnd(`========= ${urlFromConfig} ========`)
-    }
   } catch (e) {
-    const error = `Failed to fetch ${urlFromConfig} (${e.message} [${e.cause.code}])`
+    const error = `Failed to fetch ${urlFromConfig} (${e.message} [${e?.cause?.code}])`
 
     if (process.env.DEBUG) {
       console.debug(error)
