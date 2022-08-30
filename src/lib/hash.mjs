@@ -6,11 +6,15 @@ export function hashString (str) {
   return new Buffer.from(sha256.hash(str)).toString('hex') // eslint-disable-line new-cap
 }
 
+export function sortLists (data, sortByParam) {
+  return sortBy(data, sortByParam)
+}
+
 // Stringifys an object in preparation for hashing
 export function prepareForHash (data, sortByParam = false) {
   let toStringify
   if (sortByParam) {
-    toStringify = sortBy(data, sortByParam)
+    toStringify = sortLists(data, sortByParam)
   } else {
     toStringify = data
   }

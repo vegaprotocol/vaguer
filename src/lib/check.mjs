@@ -1,4 +1,4 @@
-import { listHash, stakeHash, paramHash, prepareForHash } from './hash.mjs'
+import { listHash, stakeHash, paramHash, prepareForHash, sortLists } from './hash.mjs'
 
 // Statistics to pull from the `statistics` property of the result and put on each node
 const statsWeCareAbout = ['blockHeight', 'totalPeers']
@@ -197,9 +197,9 @@ export function check (urlFromConfig, stats) {
     res.data.startup = startupData
     res.data.params = params.data
     res.data.steak = stake.data
-    res.data.governance = stats.data.proposals
-    res.data.markets = stats.data.markets
-    res.data.assets = stats.data.assets
+    res.data.governance = sortLists(stats.data.proposals, 'id')
+    res.data.markets = sortLists(stats.data.markets, 'id')
+    res.data.assets = sortLists(stats.data.assets, 'id')
 
     // Let's hash some data
     res.startupHash = prepareForHash(startupData)

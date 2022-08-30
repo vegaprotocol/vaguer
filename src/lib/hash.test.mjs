@@ -22,6 +22,7 @@ test('prepareForHash optional second parameter sorts an array of objects', t => 
 
   const unsorted = [
     { name: 'Zaphod', order: 100 },
+    { name: 'Milliways', order: 50 },
     { name: 'Arthur', order: 1 }
   ]
 
@@ -35,6 +36,7 @@ test('prepareForHash optional second parameter ignored if not provided', t => {
   t.plan(1)
 
   const unsorted = [
+    { name: 'Milliways', order: 50 },
     { name: 'Zaphod', order: 100 },
     { name: 'Arthur', order: 1 }
   ]
