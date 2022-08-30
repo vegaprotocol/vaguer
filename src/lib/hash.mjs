@@ -11,14 +11,8 @@ export function sortLists (data, sortByParam) {
 }
 
 // Stringifys an object in preparation for hashing
-export function prepareForHash (data, sortByParam = false) {
-  let toStringify
-  if (sortByParam) {
-    toStringify = sortLists(data, sortByParam)
-  } else {
-    toStringify = data
-  }
-  return hashString(stringify(toStringify))
+export function prepareForHash (data) {
+  return hashString(stringify(data))
 }
 
 /**

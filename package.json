@@ -1,6 +1,6 @@
 {
   "name": "vaguer",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Basic diagnostic tool for comparing vega data nodes",
   "main": "index.js",
   "engines": {

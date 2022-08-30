@@ -194,20 +194,25 @@ export function check (urlFromConfig, stats) {
     const stake = stakeHash(stats, urlFromConfig)
     const params = paramHash(stats, urlFromConfig)
 
+    stats.data.proposals = sortLists(stats.data.proposals, 'id')
+    stats.data.markets = sortLists(stats.data.markets, 'id')
+    stats.data.markets.accounts = sortLists(stats.data.markets.accounts, 'type')
+    stats.data.assets = sortLists(stats.data.assets, 'id')
+
     res.data.startup = startupData
     res.data.params = params.data
     res.data.steak = stake.data
-    res.data.governance = sortLists(stats.data.proposals, 'id')
-    res.data.markets = sortLists(stats.data.markets, 'id')
-    res.data.assets = sortLists(stats.data.assets, 'id')
+    res.data.governance = stats.data.proposals
+    res.data.markets = stats.data.markets
+    res.data.assets = stats.data.assets
 
     // Let's hash some data
     res.startupHash = prepareForHash(startupData)
     res.paramHash = params.hash
     res.steakHash = stake.hash
-    res.governanceHash = prepareForHash(stats.data.proposals, 'id')
-    res.marketsHash = prepareForHash(stats.data.markets, 'id')
-    res.assetsHash = prepareForHash(stats.data.assets, 'id')
+    res.governanceHash = prepareForHash(stats.data.proposals)
+    res.marketsHash = prepareForHash(stats.data.markets)
+    res.assetsHash = prepareForHash(stats.data.assets)
 
     res.hashHash = listHash(res.startupHash, res.paramHash, res.steakHash, res.marketsHash, res.assetsHash, res.governanceHash)
   } catch (e) {
