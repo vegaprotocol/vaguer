@@ -7,8 +7,14 @@ export function hashString (str) {
 }
 
 // Stringifys an object in preparation for hashing
-export function prepareForHash (object) {
-  return hashString(stringify(object))
+export function prepareForHash (data, sortByParam = false) {
+  let toStringify
+  if (sortByParam) {
+    toStringify = sortBy(data, sortByParam)
+  } else {
+    toStringify = data
+  }
+  return hashString(stringify(toStringify))
 }
 
 /**

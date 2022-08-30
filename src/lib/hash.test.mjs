@@ -1,5 +1,6 @@
 import test from 'tape'
 import { prepareForHash, stakeHash, hashString } from './hash.mjs'
+import stringify from 'fast-json-stable-stringify'
 
 test('prepareForHash is consistent despite unsorted API responses', t => {
   const res1 = prepareForHash({ test: 'value', equal: true })
@@ -14,6 +15,34 @@ test('prepareForHash is sane', t => {
   const res = prepareForHash({ key: 'value', field: true })
   const knownHash = '3addfb141cd7c9c4c6543a82191a3707ac29c7a041217782e61d4d91c691aee8'
   t.equal(res, knownHash, 'Hash matches known result')
+})
+
+test('prepareForHash optional second parameter sorts an array of objects', t => {
+  t.plan(1)
+
+  const unsorted = [
+    { name: 'Zaphod', order: 100 },
+    { name: 'Arthur', order: 1 }
+  ]
+
+  const resIfUnsorted = hashString(stringify(unsorted))
+
+  const res = prepareForHash(unsorted, 'order')
+  t.doesNotEqual(resIfUnsorted, res, 'Object should have been sorted by order')
+})
+
+test('prepareForHash optional second parameter ignored if not provided', t => {
+  t.plan(1)
+
+  const unsorted = [
+    { name: 'Zaphod', order: 100 },
+    { name: 'Arthur', order: 1 }
+  ]
+
+  const resIfUnsorted = hashString(stringify(unsorted))
+
+  const res = prepareForHash(unsorted)
+  t.equal(resIfUnsorted, res, 'Object should not have been sorted by order')
 })
 
 test('stake hash results are consistent despite unsorted API nodes', t => {

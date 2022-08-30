@@ -205,9 +205,9 @@ export function check (urlFromConfig, stats) {
     res.startupHash = prepareForHash(startupData)
     res.paramHash = params.hash
     res.steakHash = stake.hash
-    res.governanceHash = prepareForHash(stats.data.proposals)
-    res.marketsHash = prepareForHash(stats.data.markets)
-    res.assetsHash = prepareForHash(stats.data.assets)
+    res.governanceHash = prepareForHash(stats.data.proposals, 'id')
+    res.marketsHash = prepareForHash(stats.data.markets, 'id')
+    res.assetsHash = prepareForHash(stats.data.assets, 'id')
 
     res.hashHash = listHash(res.startupHash, res.paramHash, res.steakHash, res.marketsHash, res.assetsHash, res.governanceHash)
   } catch (e) {
