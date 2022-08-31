@@ -15,7 +15,7 @@ export async function output (nodes) {
     nodeForComparison = { blockHeight: -200 }
   }
 
-  nodes.forEach(node => {
+  const out = nodes.map(node => {
     let color = 'green'
 
     // Colour code nodes. Green means it is in a set of nodes that agree on ouput
@@ -46,10 +46,15 @@ export async function output (nodes) {
       hashHash: node.hashHash ? node.hashHash.substr(-6) : '-'
     }
     output[grade] = node[grade]
-
     p.addRow(output, { color })
+    return output
   })
 
-  p.printTable()
+  if (!process.env.JSON) {
+    p.printTable()
+  } else {
+    console.dir(out)
+  }
+
   return nodes
 }

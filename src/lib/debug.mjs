@@ -72,6 +72,11 @@ export function findIncorrectHash (badNode, goodNode) {
 export function debug (nodes) {
   let gradeANode
 
+  if (process.env.JSON) {
+    // Just skip it
+    return nodes
+  }
+
   try {
     gradeANode = getGradeANode(nodes)
   } catch (e) {
