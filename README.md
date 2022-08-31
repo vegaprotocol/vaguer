@@ -1,4 +1,4 @@
-# Grade
+# Vaguer (formerly Grade, formerly Vaguer)
 
 Scores data nodes against peers over time 
 
