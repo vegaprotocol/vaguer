@@ -11,6 +11,8 @@ npm start fairground
 npm start mainnet1
 # Get the status of all data nodes in a given network configuration file
 npm start https://raw.githubusercontent.com/vegaprotocol/networks/master/fairground/fairground.toml
+# JSON output
+JSON=true npm start fairground
 ```
 
 # What am I seeing?
