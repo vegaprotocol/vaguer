@@ -12,8 +12,10 @@ npm start mainnet1
 # Get the status of all data nodes in a given network configuration file
 npm start https://raw.githubusercontent.com/vegaprotocol/networks/master/fairground/fairground.toml
 # JSON output
-JSON=true npm start fairground
-```
+JSON=true npm start fairground --silent
+# Prometheus output
+PROMETHEUS=true npm start fairground --silent
+````
 
 # What am I seeing?
 The hash columns are a shortened sha256 hash of some data fetched from the server, so that the consistency across nodes can be compared. A difference in hashes between two nodes means that some part of the data returned is different.
@@ -51,6 +53,9 @@ node, and aren't _necessarily_ critical errors.
 │              Example node 12 │     1108877 │         10 │    a2e0f5 │      b81119 │     5c549f │         b81119 │   c5877a │ 🧙 │
 └──────────────────────────────┴─────────────┴────────────┴───────────┴─────────────┴────────────┴────────────────┴──────────┴────┘
 ```
+
+## Alternate output formats
+For most cases, the table in the console is sufficient. JSON and Prometheus formats are available via environment variables, see above for how to use them
 
 # [LICENSE](./LICENSE)
 MIT

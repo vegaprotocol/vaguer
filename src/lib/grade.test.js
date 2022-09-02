@@ -1,5 +1,6 @@
 import test from 'tape'
-import { findMostFrequentHash, grade, isGradeA, getGradeANode } from './grade.mjs'
+
+import { findMostFrequentHash, grade, isGradeA, getGradeANode } from './grade.js'
 
 test('findMostFrequentHash does what it says', t => {
   t.plan(1)

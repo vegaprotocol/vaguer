@@ -1,6 +1,7 @@
 import test from 'tape'
-import { prepareForHash, stakeHash, hashString } from './hash.mjs'
 import stringify from 'fast-json-stable-stringify'
+
+import { prepareForHash, stakeHash, hashString } from './hash.js'
 
 test('prepareForHash is consistent despite unsorted API responses', t => {
   const res1 = prepareForHash({ test: 'value', equal: true })

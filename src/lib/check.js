@@ -1,4 +1,4 @@
-import { listHash, stakeHash, paramHash, prepareForHash, sortLists } from './hash.mjs'
+import { listHash, stakeHash, paramHash, prepareForHash, sortLists } from './hash.js'
 
 // Statistics to pull from the `statistics` property of the result and put on each node
 const statsWeCareAbout = ['blockHeight', 'totalPeers']

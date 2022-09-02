@@ -1,6 +1,7 @@
-import { isGradeA, getGradeANode } from './grade.mjs'
 import { diffJson } from 'diff'
 import chalk from 'chalk'
+
+import { isGradeA, getGradeANode } from './grade.js'
 
 /**
  * Produces coloured diff output for JSON where the hash differs. This shouldn't
@@ -72,7 +73,7 @@ export function findIncorrectHash (badNode, goodNode) {
 export function debug (nodes) {
   let gradeANode
 
-  if (process.env.JSON) {
+  if (process.env.JSON || process.env.PROMETHEUS) {
     // Just skip it
     return nodes
   }

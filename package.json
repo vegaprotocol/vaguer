@@ -1,27 +1,29 @@
 {
-  "name": "vaguer",
-  "version": "0.0.6",
+  "name": "@vegaprotocol/vaguer",
+  "version": "1.0.0",
   "description": "Basic diagnostic tool for comparing vega data nodes",
-  "main": "index.js",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": "src/bin.js",
   "engines": {
     "node": ">=0.17.5"
   },
   "scripts": {
-    "start": "node --no-warnings --experimental-fetch src/index.mjs",
-    "test": "npx tape src/**/*.test.mjs | tap-spot",
+    "start": "node --no-warnings --experimental-fetch src/index.js",
+    "test": "npx tape src/**/*.test.js | tap-spot",
     "lint": "npx standard",
     "lint:fix": "npx standard --fix"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edd/vaguer.git"
+    "url": "git+https://github.com/vegaprotocol/vaguer.git"
   },
-  "author": "",
+  "author": "Vega <hi@vega.xyz>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/edd/vaguer/issues"
+    "url": "https://github.com/vegaprotocol/vaguer/issues"
   },
-  "homepage": "https://github.com/edd/vaguer#readme",
+  "homepage": "https://github.com/vegaprotocol/vaguer#readme",
   "precommit": [
     "lint",
     "test"
