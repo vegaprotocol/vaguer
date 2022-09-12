@@ -81,7 +81,6 @@ const query = `{
       balance
     }
     data {
-      auctionEnd
       auctionStart
       trigger
       markPrice
