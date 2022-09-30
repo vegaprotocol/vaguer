@@ -42,9 +42,6 @@ const query = `{
     datetime
     errorDetails
     terms {
-      change {
-        __typename
-      }
       closingDatetime
       enactmentDatetime
     }
@@ -72,10 +69,8 @@ const query = `{
   }
   markets {
     id
-    name
     state
     tradingMode
-    name
     accounts {
       type
       balance
