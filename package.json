@@ -32,7 +32,7 @@
     "pre-commit": "^1.2.2"
   },
   "dependencies": {
-    "chalk": "^5.0.1",
+    "chalk": "^5.1.0",
     "console-table-printer": "^2.11.0",
     "diff": "^5.1.0",
     "fast-json-stable-stringify": "^2.1.0",
