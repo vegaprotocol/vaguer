@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Basic diagnostic tool for comparing vega data nodes",
   "type": "module",
-  "main": "src/index.js",
   "bin": "src/bin.js",
   "engines": {
     "node": ">=0.17.5"
