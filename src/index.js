@@ -9,7 +9,7 @@ import { rank } from './lib/grade.js'
 
 export async function main () {
   const knownConfigUrls = {
-    fairground: 'https://raw.githubusercontent.com/vegaprotocol/networks/master/fairground/fairground.toml',
+    fairground: 'https://github.com/vegaprotocol/networks-internal/blob/main/fairground/vegawallet-fairground.toml',
     mainnet1: 'https://raw.githubusercontent.com/vegaprotocol/networks/master/mainnet1/mainnet1.toml'
   }
 
