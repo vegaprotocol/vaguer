@@ -60,12 +60,6 @@ const query = `{
         maxFaucetAmountMint
       }
     }
-    infrastructureFeeAccount {
-      balance
-    }
-    globalRewardPoolAccount {
-      balance
-    }
   }
   markets {
     id
