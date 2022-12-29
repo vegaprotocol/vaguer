@@ -14,13 +14,21 @@ const query = `{
     vegaTime
     currentTime
   }
-  nodes {
-    name
-    stakedTotal
+  nodesConnection {
+    edges {
+      node {
+        name
+        stakedTotal        
+      }
+    }
   }
-  networkParameters {
-    key
-    value
+  networkParametersConnection {
+    edges {
+      node {
+        key
+        value
+      }
+    }
   }
   epoch {
     id
@@ -30,51 +38,68 @@ const query = `{
       end
     }
   }
-  proposals {
-    id
-    party {
-      id
-      stake {
-        currentStakeAvailable
-      }
-    }
-    state
-    datetime
-    errorDetails
-    terms {
-      closingDatetime
-      enactmentDatetime
-    }
-  }
-  assets {
-    id
-    name
-    symbol
-    decimals
-    quantum
-    source {
-      ... on ERC20 {
-        contractAddress
-      }
-      ... on BuiltinAsset {
-        maxFaucetAmountMint
+  proposalsConnection {
+    edges {
+      node {
+        id
+        party {
+          id
+          stakingSummary {
+            currentStakeAvailable
+          }
+        }
+        state
+        datetime
+        errorDetails
+        terms {
+          closingDatetime
+          enactmentDatetime
+        }
       }
     }
   }
-  markets {
-    id
-    state
-    tradingMode
-    accounts {
-      type
-      balance
-    }
-    data {
-      auctionStart
-      trigger
-      markPrice
+  assetsConnection {
+    edges {
+      node {
+        id
+        name
+        symbol
+        decimals
+        quantum
+        source {
+          ... on ERC20 {
+            contractAddress
+          }
+          ... on BuiltinAsset {
+            maxFaucetAmountMint
+          }
+        }
+      }
     }
   }
+  marketsConnection {
+    edges {
+      node {
+        id
+        state
+        tradingMode
+        accountsConnection {
+          edges {
+            node {
+              type
+              balance              
+            }
+          }
+        }
+        data {
+          auctionStart
+          trigger
+          markPrice
+        }
+      }
+    }
+  }
+
 }`
 
 export async function fetchStats (urlFromConfig) {
