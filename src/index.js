@@ -45,5 +45,3 @@ export async function main () {
     console.error(`Failed to fetch config from ${configUrl}`)
   }
 }
-
-main()
