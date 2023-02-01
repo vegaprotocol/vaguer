@@ -8,7 +8,7 @@
     "node": ">=0.17.5"
   },
   "scripts": {
-    "start": "node --no-warnings --experimental-fetch src/index.js",
+    "start": "node --no-warnings --experimental-fetch src/bin.js",
     "test": "npx tape src/**/*.test.js | tap-spot",
     "lint": "npx standard",
     "lint:fix": "npx standard --fix"

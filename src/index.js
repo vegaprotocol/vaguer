@@ -42,6 +42,11 @@ export async function main () {
       .then(debug)
       .then(output)
   } catch (e) {
-    console.error(`Failed to fetch config from ${configUrl}`)
+    if (e.message.indexOf('fetch is not defined') !== -1) {
+      console.error('❌ fetch is not enabled in your version of node. Either update, use "npm start" or run with "--experimental-fetch"')
+    } else {
+      console.error(`Failed to fetch config from ${configUrl}`)
+      console.dir(e)
+    }
   }
 }

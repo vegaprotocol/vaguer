@@ -128,9 +128,7 @@ export async function fetchStats (urlFromConfig) {
   } catch (e) {
     const error = `Failed to fetch ${urlFromConfig} (${e.message} [${e?.cause?.code}])`
 
-    if (process.env.DEBUG) {
-      console.debug(error)
-    }
+    console.debug(error)
 
     return fakeCheck(urlFromConfig, error)
   }
