@@ -1,20 +1,19 @@
 # Vaguer (formerly Grade, formerly Vaguer)
 
 Scores data nodes against peers over time 
-
 # Run it
-```bash
-npm install
+The best way to run it is with npx, from github. That'll save you cloning it manually.
+```bah
 # Get the status of all data nodes on fairground
-npm start fairground
+npx github:vegaprotocol/vaguer fairground
 # Get the status of all data nodes on mainnet1
-npm start mainnet1
+npx github:vegaprotocol/vaguer mainnet1
 # Get the status of all data nodes in a given network configuration file
-npm start https://raw.githubusercontent.com/vegaprotocol/networks/master/fairground/fairground.toml
+npx github:vegaprotocol/vaguer https://raw.githubusercontent.com/vegaprotocol/networks/master/fairground/fairground.toml
 # JSON output
-JSON=true npm start fairground --silent
+JSON=true npx github:vegaprotocol/vaguer fairground --silent
 # Prometheus output
-PROMETHEUS=true npm start fairground --silent
+PROMETHEUS=true npx github:vegaprotocol/vaguer fairground --silent
 ````
 
 # What am I seeing?
