@@ -128,7 +128,9 @@ export async function fetchStats (urlFromConfig) {
   } catch (e) {
     const error = `Failed to fetch ${urlFromConfig} (${e.message} [${e?.cause?.code}])`
 
-    console.debug(error)
+    if (process.env.DEBUG) {
+      console.error(error)
+    }
 
     return fakeCheck(urlFromConfig, error)
   }
@@ -137,7 +139,7 @@ export async function fetchStats (urlFromConfig) {
     const error = `Failed to fetch ${urlFromConfig} (Empty result)`
 
     if (process.env.DEBUG) {
-      console.debug(error)
+      console.error(error)
     }
 
     return fakeCheck(urlFromConfig, error)
@@ -147,7 +149,7 @@ export async function fetchStats (urlFromConfig) {
     const error = `Failed to fetch ${urlFromConfig} (${JSON.stringify(stats.errors)})`
 
     if (process.env.DEBUG) {
-      console.debug(error)
+      console.error(error)
     }
 
     return fakeCheck(urlFromConfig, error)
