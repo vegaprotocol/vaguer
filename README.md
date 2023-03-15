@@ -3,11 +3,14 @@
 Scores data nodes against peers over time 
 # Run it
 The best way to run it is with npx, from github. That'll save you cloning it manually.
-```bah
+```bash
 # Get the status of all data nodes on fairground
 npx github:vegaprotocol/vaguer fairground
 # Get the status of all data nodes on mainnet1
 npx github:vegaprotocol/vaguer mainnet1
+# The same as above, but with support for data nodes on version 0.53.0
+SUPPORT_053=true npx github:vegaprotocol/vaguer mainnet1
+
 # Get the status of all data nodes in a given network configuration file
 npx github:vegaprotocol/vaguer https://raw.githubusercontent.com/vegaprotocol/networks/master/fairground/fairground.toml
 # JSON output
@@ -27,6 +30,7 @@ The hash columns are a shortened sha256 hash of some data fetched from the serve
 * *assetsHash* hashes some basic information about the active assets on the network
 * *governanceHash* hashes some basic information about governance proposals on the network
 * *hashHash* is a hash of the above hashes, plus a hash of network information and genesis information
+* *https* shows a tick if the node serves over HTTPS
 
 The final result is that the set of nodes that are on the same height and agree on the final `hashHash` are considered to be 'correct', and the nodes that differ will
 display some debugging information above the table that points to where the hashes diverge. Divergent hashes of nodes on the same block height suggest a problem with the
