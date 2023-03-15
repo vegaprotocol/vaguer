@@ -4,6 +4,84 @@ import { looksLikeHTTPS } from './https-check.js'
 // Statistics to pull from the `statistics` property of the result and put on each node
 const statsWeCareAbout = ['blockHeight', 'totalPeers']
 
+const v053query = `{
+    statistics {
+      appVersion
+      blockHeight
+      chainId
+      totalPeers
+      genesisTime
+      vegaTime
+      currentTime
+    }
+    nodes {
+      name
+      stakedTotal
+    }
+    networkParameters {
+      key
+      value
+    }
+    epoch {
+      id
+      timestamps {
+        start
+        expiry
+        end
+      }
+    }
+    proposals {
+        id
+        party {
+          id
+        }
+        state
+        datetime
+        errorDetails
+        terms {
+          closingDatetime
+          enactmentDatetime
+        }
+    }
+    assetsConnection {
+      edges {
+        node {
+          id
+          name
+          symbol
+          decimals
+          quantum
+          source {
+            ... on ERC20 {
+              contractAddress
+            }
+            ... on BuiltinAsset {
+              maxFaucetAmountMint
+            }
+          }
+        }
+      }
+    }
+    marketsConnection {
+      edges {
+        node {
+          id
+          state
+          tradingMode
+          accounts {
+              type
+              balance
+          }
+          data {
+            auctionStart
+            trigger
+            markPrice
+          }
+        }
+      }
+    }
+}`
+
 // This query runs against all nodes and is the basis for the data comparison
 const query = `{
   statistics {
@@ -117,7 +195,7 @@ export async function fetchStats (urlFromConfig) {
       method: 'POST',
       body: JSON.stringify({
         variables: null,
-        query
+        query: process.env.SUPPORT_053 ? v053query : query
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -167,11 +245,11 @@ export async function fetchStats (urlFromConfig) {
 function fakeCheck (url, error) {
   const res = {
     host: url,
+    https: looksLikeHTTPS(url),
     startupHash: '-',
     paramHash: '-',
     steakHash: '-',
     hashHash: '-',
-    https: false,
     data: {
       error
     }
@@ -203,8 +281,7 @@ export function check (urlFromConfig, stats) {
       vegaTime: stats.data.statistics.vegaTime,
       chainId: stats.data.statistics.chainId,
       epoch: stats.data.epoch.id,
-      timestamps: stats.data.epoch.timestamps,
-      https: looksLikeHTTPS(urlFromConfig)
+      timestamps: stats.data.epoch.timestamps
     }
 
     const stake = stakeHash(stats, urlFromConfig)
@@ -229,6 +306,7 @@ export function check (urlFromConfig, stats) {
     res.governanceHash = prepareForHash(stats.data.proposals)
     res.marketsHash = prepareForHash(stats.data.markets)
     res.assetsHash = prepareForHash(stats.data.assets)
+    res.https = looksLikeHTTPS(urlFromConfig)
 
     res.hashHash = listHash(res.startupHash, res.paramHash, res.steakHash, res.marketsHash, res.assetsHash, res.governanceHash)
   } catch (e) {
