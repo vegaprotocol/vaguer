@@ -22,7 +22,8 @@ export async function output (nodes) {
       marketsHash: node.marketsHash ? node.marketsHash.substr(-6) : '-',
       assetsHash: node.assetsHash ? node.assetsHash.substr(-6) : '-',
       governanceHash: node.governanceHash ? node.governanceHash.substr(-6) : '-',
-      hashHash: node.hashHash ? node.hashHash.substr(-6) : '-'
+      hashHash: node.hashHash ? node.hashHash.substr(-6) : '-',
+      https: node.hasHttps ? '✅' : '❌'
     }
     output[grade] = node[grade]
     return output

@@ -1,4 +1,5 @@
 import { listHash, stakeHash, paramHash, prepareForHash, sortLists } from './hash.js'
+import { looksLikeHTTPS } from './https-check.js'
 
 // Statistics to pull from the `statistics` property of the result and put on each node
 const statsWeCareAbout = ['blockHeight', 'totalPeers']
@@ -18,7 +19,7 @@ const query = `{
     edges {
       node {
         name
-        stakedTotal        
+        stakedTotal
       }
     }
   }
@@ -87,7 +88,7 @@ const query = `{
           edges {
             node {
               type
-              balance              
+              balance
             }
           }
         }
@@ -170,6 +171,7 @@ function fakeCheck (url, error) {
     paramHash: '-',
     steakHash: '-',
     hashHash: '-',
+    https: false,
     data: {
       error
     }
@@ -201,7 +203,8 @@ export function check (urlFromConfig, stats) {
       vegaTime: stats.data.statistics.vegaTime,
       chainId: stats.data.statistics.chainId,
       epoch: stats.data.epoch.id,
-      timestamps: stats.data.epoch.timestamps
+      timestamps: stats.data.epoch.timestamps,
+      https: looksLikeHTTPS(urlFromConfig)
     }
 
     const stake = stakeHash(stats, urlFromConfig)

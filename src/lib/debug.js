@@ -70,6 +70,10 @@ export function findIncorrectHash (badNode, goodNode) {
   }
 }
 
+/**
+ * If a node is reported not to be grad A, debug tries to figure out what is not right
+ * about it so that anyone running vaguer can try and fix it.
+*/
 export function debug (nodes) {
   let gradeANode
 

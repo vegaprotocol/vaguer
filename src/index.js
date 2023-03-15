@@ -6,6 +6,7 @@ import { fetchStats } from './lib/check.js'
 import { output } from './lib/output.js'
 import { debug } from './lib/debug.js'
 import { rank } from './lib/grade.js'
+import { httpsCheck } from './lib/https-check.js'
 
 export async function main () {
   const knownConfigUrls = {
@@ -38,6 +39,7 @@ export async function main () {
 
     // Fetch the same data from all nodes and process it
     Promise.all(config.API.GraphQL.Hosts.map(fetchStats))
+      .then(httpsCheck)
       .then(rank)
       .then(debug)
       .then(output)
