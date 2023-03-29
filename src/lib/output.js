@@ -82,6 +82,6 @@ export function outputPrometheus (nodes, testMock) {
 
   nodes.forEach(n => {
     const value = n[grade] === grade ? 1 : 0
-    output(`${METRIC_NAME}{host="${n.host}"} ${value}`)
+    output(`${METRIC_NAME}{ssl="${n.https === '✓'}", host="${n.host}"} ${value}`)
   })
 }

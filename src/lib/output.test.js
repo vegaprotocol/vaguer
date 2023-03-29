@@ -13,7 +13,7 @@ test('outputPrometheus does what it says: graded', t => {
   nodeList[0][grade] = grade
 
   outputPrometheus(nodeList, input => {
-    t.equal(input, `${METRIC_NAME}{host="test-1"} 1`, 'Generates a valid prometheus metric of 1')
+    t.equal(input, `${METRIC_NAME}{ssl="false", host="test-1"} 1`, 'Generates a valid prometheus metric of 1')
   })
 })
 
@@ -25,7 +25,19 @@ test('outputPrometheus does what it says: ungraded', t => {
   ]
 
   outputPrometheus(nodeList, input => {
-    t.equal(input, `${METRIC_NAME}{host="test-1"} 0`, 'Generates a valid prometheus metric of 0')
+    t.equal(input, `${METRIC_NAME}{ssl="false", host="test-1"} 0`, 'Generates a valid prometheus metric of 0')
+  })
+})
+
+test('outputPrometheus correctly detects ssl', t => {
+  t.plan(1)
+
+  const nodeList = [
+    { host: 'test-1', https: '✓' }
+  ]
+
+  outputPrometheus(nodeList, input => {
+    t.equal(input, `${METRIC_NAME}{ssl="true", host="test-1"} 0`, 'Generates a valid prometheus metric of 0')
   })
 })
 
