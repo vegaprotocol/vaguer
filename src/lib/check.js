@@ -11,8 +11,6 @@ const v053query = `{
       chainId
       totalPeers
       genesisTime
-      vegaTime
-      currentTime
     }
     nodes {
       name
@@ -90,8 +88,6 @@ const query = `{
     chainId
     totalPeers
     genesisTime
-    vegaTime
-    currentTime
   }
   nodesConnection {
     edges {

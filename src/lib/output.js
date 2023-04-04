@@ -16,8 +16,8 @@ export async function output (nodes) {
       blockHeight: node.blockHeight,
       totalPeers: node.totalPeers,
       // Next two stats disabled for brevity. They still appear in the diagnosis output and are used in hashHash
-      // startupHash: node.startupHash ? node.startupHash.substr(-6) : '-',
-      // paramHash: node.paramHash ? node.paramHash.substr(-6) : '-',
+      startupHash: node.startupHash ? node.startupHash.substr(-6) : '-',
+      paramHash: node.paramHash ? node.paramHash.substr(-6) : '-',
       steakHash: node.steakHash ? node.steakHash.substr(-6) : '-',
       marketsHash: node.marketsHash ? node.marketsHash.substr(-6) : '-',
       assetsHash: node.assetsHash ? node.assetsHash.substr(-6) : '-',
@@ -55,7 +55,7 @@ export function outputDefault (nodes) {
 
     // Colour code nodes. Green means it is in a set of nodes that agree on ouput
     if (!isGradeA(n)) {
-      if (n.blockHeight !== '-' && n.blockHeight !== nodeForComparison.blockHeight) {
+      if (n.blockHeight !== '-' && Math.abs(n.blockHeight - nodeForComparison.blockHeight) <= 3) {
         // Yellow means the node was at a different block height to the consensus set,
         // so it failed but for reasons that may be valid due to changes between blocks
         color = 'yellow'

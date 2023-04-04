@@ -37,8 +37,11 @@ export function listHash () {
  * @return Object containing `hash`, the string hash result and `data`, the input that was hashed
  **/
 export function stakeHash (stats, urlFromConfig) {
-  if (stats?.data?.nodes?.length > 0) {
-    const stakeValues = sortBy(stats.data.nodes, 'name')
+  if (stats?.data?.nodesConnection?.edges?.length > 0) {
+    const stakeValues = sortBy(stats.data.nodesConnection.edges.nodes, 'node.name')
+    return { hash: prepareForHash(stakeValues), data: stakeValues }
+  } else if (stats?.data?.nodes?.length > 0) {
+    const stakeValues = sortBy(stats.data.nodes, 'node.name')
     return { hash: prepareForHash(stakeValues), data: stakeValues }
   } else {
     if (process.env.DEBUG) {
@@ -57,7 +60,10 @@ export function stakeHash (stats, urlFromConfig) {
  * @return Object containing `hash`, the string hash result and `data`, the input that was hashed
  **/
 export function paramHash (stats, urlFromConfig) {
-  if (stats?.data?.networkParameters?.length > 0) {
+  if (stats?.data?.networkParametersConnection?.edges?.length > 0) {
+    const paramValues = sortBy(stats.data.networkParametersConnection?.edges, 'node.key')
+    return { hash: prepareForHash(paramValues), data: paramValues }
+  } else if (stats?.data?.networkParameters?.length > 0) {
     const paramValues = sortBy(stats.data.networkParameters, 'key')
     return { hash: prepareForHash(paramValues), data: paramValues }
   } else {
