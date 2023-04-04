@@ -55,7 +55,7 @@ export function outputDefault (nodes) {
 
     // Colour code nodes. Green means it is in a set of nodes that agree on ouput
     if (!isGradeA(n)) {
-      if (n.blockHeight !== '-' && Math.abs(n.blockHeight - nodeForComparison.blockHeight) <= 3) {
+      if (n.blockHeight !== '-' && Math.abs(n.blockHeight - nodeForComparison.blockHeight) <= 1) {
         // Yellow means the node was at a different block height to the consensus set,
         // so it failed but for reasons that may be valid due to changes between blocks
         color = 'yellow'
