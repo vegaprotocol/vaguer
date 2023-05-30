@@ -44,7 +44,7 @@
     "lodash.sample": "^4.2.1",
     "lodash.sortby": "^4.7.0",
     "minimist": "^1.2.8",
-    "standard": "^17.0.0",
+    "standard": "^17.1.0",
     "tap-spot": "^1.1.2",
     "tape": "^5.6.3",
     "toml": "^3.0.0",
