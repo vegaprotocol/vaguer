@@ -1,13 +1,6 @@
-src/**/*.test.js
-
-LICENSE
-README.md
-Dockerfile
-*.md
 .husky
 .git
 .github
 .dockerignore
 .npmignore
 .gitignore
-
