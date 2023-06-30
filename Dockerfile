@@ -1,9 +1,9 @@
 ## Build with node 18
 FROM node:18-bullseye-slim AS build
 WORKDIR /app
+COPY package*.json ./
+RUN npm ci --no-audit
 COPY . .
-ENV NODE_ENV=production
-RUN npm install --no-audit
 
 ## Run in distroless
 FROM astefanutti/scratch-node:18.10.0
