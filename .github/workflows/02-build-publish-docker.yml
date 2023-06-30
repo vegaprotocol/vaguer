@@ -27,6 +27,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/vaguer
+            ghcr.io/${{ github.repository }}
+        
       - name: Build
         id: docker_build
         uses: docker/build-push-action@v3
@@ -34,12 +42,8 @@ jobs:
           context: .
           platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ghcr.io/vegaprotocol/vaguer:latest
-            ghcr.io/vegaprotocol/vaguer:${{github.ref_name}}
-            ${{ secrets.DOCKERHUB_USERNAME }}/vaguer:${{ steps.vars.outputs.tag }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/vaguer:latest
-
+          tags: ${{ steps.meta.outputs.tags }} 
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
