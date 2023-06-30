@@ -1,14 +1,12 @@
 src/**/*.test.js
 
-dist
-build
 LICENSE
+README.md
+Dockerfile
 *.md
-test
 .husky
+.git
 .github
-results
-assets
 .dockerignore
 .npmignore
 .gitignore
