@@ -1,2 +1,15 @@
-node_modules
-npm-debug.log
+src/**/*.test.js
+
+dist
+build
+LICENSE
+*.md
+test
+.husky
+.github
+results
+assets
+.dockerignore
+.npmignore
+.gitignore
+

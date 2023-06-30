@@ -1,17 +1,12 @@
-FROM node:16
-
-# Create app directory
-WORKDIR /usr/src/app
-
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-
-# If you are building your code for production
-RUN npm ci
-
-# Bundle app source
+## Build with node 18
+FROM node:18-bullseye-slim AS build
+WORKDIR /app
 COPY . .
+ENV NODE_ENV=production
+RUN npm install --omit=dev --no-audit
 
-CMD [ "node", "server.js" ]
+## Run in distroless
+FROM astefanutti/scratch-node:18.10.0
+COPY --from=build /app /app
+WORKDIR /app
+ENTRYPOINT ["node", "src/bin.js"]
