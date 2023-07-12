@@ -30,7 +30,7 @@
   "devDependencies": {
     "pre-commit": "^1.2.2",
     "tap-spot": "^1.1.2",
-    "tape": "^5.6.4"
+    "tape": "^5.6.5"
   },
   "dependencies": {
     "chalk": "^5.3.0",
