@@ -1,8 +1,12 @@
 import { listHash, stakeHash, paramHash, prepareForHash, sortLists } from './hash.js'
 import { looksLikeHTTPS } from './https-check.js'
+import { subHours, formatISO } from 'date-fns'
 
 // Statistics to pull from the `statistics` property of the result and put on each node
 const statsWeCareAbout = ['blockHeight', 'totalPeers']
+const intervalHours = 1
+const candleCount = 24
+const timestamp = formatISO(subHours(new Date(), (candleCount * intervalHours) + 1))
 
 // This query runs against all nodes and is the basis for the data comparison
 const query = `{
@@ -110,7 +114,7 @@ const query = `{
           trigger
           markPrice
         }
-        candlesConnection(interval: INTERVAL_I1H, since: "2024-02-10T14:42:31+00:00", pagination: { last: 5 }) {
+        candlesConnection(interval: INTERVAL_I${intervalHours}H, since: "${timestamp}", pagination: { last: ${candleCount} }) {
           edges {
             node {
               notional
