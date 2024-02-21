@@ -41,7 +41,6 @@ export function hashMismatchOutput (hashName, badProperty, goodProperty) {
  * @param goodNode an object containing the responses from a known good node
  */
 export function findIncorrectHash (badNode, goodNode) {
-  console.dir(badNode)
   if (badNode.startupHash !== goodNode.startupHash) {
     hashMismatchOutput('Startup', badNode.data.startup, goodNode.data.startup)
   }
