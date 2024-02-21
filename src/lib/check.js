@@ -5,7 +5,7 @@ import { subHours, formatISO } from 'date-fns'
 // Statistics to pull from the `statistics` property of the result and put on each node
 const statsWeCareAbout = ['blockHeight', 'totalPeers']
 const intervalHours = 1
-const candleCount = 24
+const candleCount = 36
 const timestamp = formatISO(subHours(new Date(), (candleCount * intervalHours) + 1))
 
 // This query runs against all nodes and is the basis for the data comparison
