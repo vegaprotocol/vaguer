@@ -4,82 +4,6 @@ import { looksLikeHTTPS } from './https-check.js'
 // Statistics to pull from the `statistics` property of the result and put on each node
 const statsWeCareAbout = ['blockHeight', 'totalPeers']
 
-const v053query = `{
-    statistics {
-      appVersion
-      blockHeight
-      chainId
-      totalPeers
-      genesisTime
-    }
-    nodes {
-      name
-      stakedTotal
-    }
-    networkParameters {
-      key
-      value
-    }
-    epoch {
-      id
-      timestamps {
-        start
-        expiry
-        end
-      }
-    }
-    proposals {
-        id
-        party {
-          id
-        }
-        state
-        datetime
-        errorDetails
-        terms {
-          closingDatetime
-          enactmentDatetime
-        }
-    }
-    assetsConnection {
-      edges {
-        node {
-          id
-          name
-          symbol
-          decimals
-          quantum
-          source {
-            ... on ERC20 {
-              contractAddress
-            }
-            ... on BuiltinAsset {
-              maxFaucetAmountMint
-            }
-          }
-        }
-      }
-    }
-    marketsConnection {
-      edges {
-        node {
-          id
-          state
-          tradingMode
-          accounts {
-              type
-              balance
-          }
-          data {
-            auctionStart
-            trigger
-            markPrice
-          }
-        }
-      }
-    }
-}`
-
 // This query runs against all nodes and is the basis for the data comparison
 const query = `{
   statistics {
@@ -191,7 +115,7 @@ export async function fetchStats (urlFromConfig) {
       method: 'POST',
       body: JSON.stringify({
         variables: null,
-        query: process.env.SUPPORT_053 ? v053query : query
+        query
       }),
       headers: {
         'Content-Type': 'application/json',
