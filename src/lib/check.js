@@ -39,20 +39,35 @@ const query = `{
   }
   proposalsConnection {
     edges {
-      node {
-        id
-        party {
+      proposalNode {
+        ... on BatchProposal {
           id
-          stakingSummary {
-            currentStakeAvailable
+          datetime
+          party {
+            id
+          }
+          state
+          datetime
+          errorDetails
+          batchTerms {
+            closingDatetime
           }
         }
-        state
-        datetime
-        errorDetails
-        terms {
-          closingDatetime
-          enactmentDatetime
+        ... on Proposal {
+          id
+          party {
+            id
+            stakingSummary {
+              currentStakeAvailable
+            }
+          }
+          state
+          datetime
+          errorDetails
+          terms {
+            closingDatetime
+            enactmentDatetime
+          }
         }
       }
     }
@@ -95,10 +110,21 @@ const query = `{
           trigger
           markPrice
         }
+        candlesConnection(interval: INTERVAL_I1H, since: "2024-02-10T14:42:31+00:00", pagination: { last: 5 }) {
+          edges {
+            node {
+              notional
+              periodStart
+              close
+              open
+              high
+              low
+            }
+          }
+        }        
       }
     }
   }
-
 }`
 
 export async function fetchStats (urlFromConfig) {
@@ -179,6 +205,12 @@ function fakeCheck (url, error) {
   return res
 }
 
+// This is a helper function to un-nest the results from the GraphQL query, removing the
+// `edges` and `node` properties
+function unNest (obj) {
+  return obj.edges.map(edge => edge.proposalNode || edge.node)
+}
+
 /**
  * Given a GraphQL result from a node, hashes the data
  * so that it can be compared with the other nodes
@@ -207,10 +239,16 @@ export function check (urlFromConfig, stats) {
     const stake = stakeHash(stats, urlFromConfig)
     const params = paramHash(stats, urlFromConfig)
 
-    stats.data.proposals = sortLists(stats.data.proposals, 'id')
-    stats.data.markets = sortLists(stats.data.markets, 'id')
-    stats.data.markets.accounts = sortLists(stats.data.markets.accounts, 'type')
-    stats.data.assets = sortLists(stats.data.assets, 'id')
+    stats.data.proposals = sortLists(unNest(stats.data.proposalsConnection), 'id')
+    stats.data.markets = sortLists(unNest(stats.data.marketsConnection), 'id')
+    stats.data.assets = sortLists(unNest(stats.data.assetsConnection), 'id')
+
+    // Remove the first candle in stats.data.markets because it's still being written
+    stats.data.markets.forEach(market => {
+      if (market?.candlesConnection?.edges?.length > 0) {
+        market.candlesConnection.edges.shift()
+      }
+    })
 
     res.data.startup = startupData
     res.data.params = params.data
