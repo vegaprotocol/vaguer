@@ -10,4 +10,4 @@ assets
 .dockerignore
 .npmignore
 .gitignore
-node_modules
+node_modules/
